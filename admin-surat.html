@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Surat — Admin RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link active"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar"><div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Kelola Pengajuan Surat</div><div class="topbar-subtitle">Proses pengajuan surat dari warga</div></div></div></header>
+<main class="page-content">
+<div class="admin-card">
+<div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-file-lines"></i> Daftar Pengajuan Surat</div><div class="admin-tabs"><button class="admin-tab-btn active" onclick="filterTab('semua',this)">Semua</button><button class="admin-tab-btn" onclick="filterTab('pending',this)">⏳ Pending</button><button class="admin-tab-btn" onclick="filterTab('proses',this)">🔄 Diproses</button><button class="admin-tab-btn" onclick="filterTab('selesai',this)">✅ Selesai</button><button class="admin-tab-btn" onclick="filterTab('ditolak',this)">❌ Ditolak</button></div></div>
+<div class="table-toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="search" placeholder="Cari nama atau NIK..." oninput="renderTable()"></div><select class="filter-select" id="filter-jenis" onchange="renderTable()"><option value="">Semua Jenis</option><option value="domisili">Domisili</option><option value="pengantar">Pengantar</option><option value="kematian">Kematian</option><option value="kelahiran">Kelahiran</option><option value="skck">SKCK</option><option value="usaha">Usaha</option></select></div>
+<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>No Ref</th><th>Pemohon</th><th>NIK</th><th>Jenis Surat</th><th>Tgl Dibutuhkan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="surat-tbody"></tbody></table></div><div class="pagination" id="pagination"></div>
+</div>
+</main>
+</div>
+</div>
+<div class="modal-overlay" id="modal-detail"><div class="admin-modal"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-file-lines"></i> Detail Pengajuan Surat</div><button class="modal-close"><i class="fa-solid fa-xmark"></i></button></div><div id="modal-body"></div><div class="modal-footer" id="modal-footer"></div></div></div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+let allData=[],currentFilter='semua',currentPage=1;const STATUS_OPTIONS=[['pending','⏳ Pending'],['proses','🔄 Diproses'],['selesai','✅ Selesai'],['ditolak','❌ Ditolak']];
+function filterTab(f,btn){currentFilter=f,currentPage=1,document.querySelectorAll('.admin-tab-btn').forEach((b=>b.classList.remove('active'))),btn.classList.add('active'),renderTable()}
+function renderTable(){const q=document.getElementById('search').value.toLowerCase(),jenis=document.getElementById('filter-jenis').value;let filtered=allData;'semua'!==currentFilter&&(filtered=filtered.filter((d=>d.status===currentFilter))),q&&(filtered=filtered.filter((d=>(d.nama+d.nik+d.jenisSurat).toLowerCase().includes(q)))),jenis&&(filtered=filtered.filter((d=>d.jenisSurat===jenis)));const{data,pages}=paginate(filtered,currentPage,10),tbody=document.getElementById('surat-tbody');if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-gray)">Tidak ada data</td></tr>',document.getElementById('pagination').innerHTML='';return}tbody.innerHTML=data.map((s=>`<tr>
+    <td style="font-family:monospace;font-size:.78rem;color:var(--primary);font-weight:700">${s.id}</td>
+    <td><div style="font-weight:600">${s.nama}</div><div style="font-size:.78rem;color:var(--text-gray)">${s.telepon||''}</div></td>
+    <td style="font-family:monospace;font-size:.8rem">${s.nik}</td>
+    <td><span class="badge badge-info">${s.jenisSuratLabel||s.jenisSurat}</span></td>
+    <td style="font-size:.85rem">${formatDate(s.tglDibutuhkan)}</td>
+    <td>${statusBadge(s.status)}</td>
+    <td style="display:flex;gap:.4rem;flex-wrap:wrap">
+      <button class="btn btn-secondary btn-xs" onclick="showDetail('${s.id}')"><i class="fa-solid fa-eye"></i> Detail</button>
+      ${s.status==='pending'?`<button class="btn btn-primary btn-xs" onclick="updateStatus('${s.id}','proses')"><i class="fa-solid fa-play"></i> Proses</button>`:''}
+      ${s.status==='proses'?`<button class="btn btn-primary btn-xs" onclick="updateStatus('${s.id}','selesai')"><i class="fa-solid fa-check"></i> Selesai</button>`:''}
+      <button class="btn btn-danger btn-xs btn-icon" onclick="confirmDeleteSurat('${s.id}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+    </td>
+  </tr>`)).join(''),renderPagination('pagination',pages,currentPage,'changePage')}
+function changePage(p){currentPage=p,renderTable()}
+function showDetail(id){const s=allData.find((e=>e.id===id));if(!s)return;document.getElementById('modal-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      ${[['Nomor Referensi', s.id], ['Nama Pemohon', s.nama], ['NIK', s.nik], ['Telepon', s.telepon || '-'], ['Jenis Surat', s.jenisSuratLabel || s.jenisSurat], ['Tgl Dibutuhkan', formatDate(s.tglDibutuhkan)], ['Tanggal Pengajuan', s.createdAt]].map(([l, v]) => `<div class="detail-row" style="flex-direction:column;margin:0"><span style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase">${l}</span><span style="font-weight:600;margin-top:.2rem">${v}</span></div>`).join('')}
+    </div>
+    <div style="margin-bottom:1rem"><div style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase;margin-bottom:.3rem">Keperluan</div><div style="background:#f8fafc;border-radius:var(--radius-sm);padding:.75rem;font-size:.875rem">${s.keperluan}</div></div>
+    ${s.tambahan ? `<div><div style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase;margin-bottom:.3rem">Keterangan Tambahan</div><div style="background:#f8fafc;border-radius:var(--radius-sm);padding:.75rem;font-size:.875rem">${s.tambahan}</div></div>` : ''}
+    <div style="margin-top:1rem"><strong>Status Saat Ini:</strong> ${statusBadge(s.status)}</div>
+    <div style="margin-top:1.25rem">
+      <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:.4rem">Ubah Status:</label>
+      <select id="status-select" class="form-control" style="max-width:200px" onchange="toggleFileUpload(this.value)">
+        ${STATUS_OPTIONS.map(([v,l])=>`<option value="${v}" ${s.status===v?'selected':''}>${l}</option>`).join('')}
+      </select>
+    </div>
+    <div id="file-upload-wrap" style="margin-top:1rem; display: ${s.status === 'selesai' ? 'block' : 'none'}">
+      <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:.4rem">Upload Surat Digital (PDF/Image):</label>
+      <input type="file" id="file-surat" class="form-control" accept="image/*,application/pdf">
+      ${s.fileSurat ? `<div style="margin-top:.5rem"><a href="${s.fileSurat}" target="_blank" class="btn btn-secondary btn-xs"><i class="fa-solid fa-download"></i> Lihat File Saat Ini</a></div>` : ''}
+    </div>
+    <div style="margin-top:1rem">
+      <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:.4rem">Balasan / Keterangan Admin:</label>
+      <textarea id="balasan-admin" class="form-control" rows="2" placeholder="Isi pesan untuk warga...">${s.balasan||''}</textarea>
+    </div>`;document.getElementById('modal-footer').innerHTML=`<button class="btn btn-secondary" onclick="closeModal('modal-detail')">Tutup</button><button class="btn btn-primary" onclick="updateStatusFromModal('${s.id}')"><i class="fa-solid fa-save"></i> Simpan Status & File</button>`,openModal('modal-detail')}
+function toggleFileUpload(val){document.getElementById('file-upload-wrap').style.display='selesai'===val?'block':'none'}
+async function updateStatusFromModal(id){const status=document.getElementById('status-select').value,balasan=document.getElementById('balasan-admin').value,fileInput=document.getElementById('file-surat');let fileBase64=null;if(fileInput&&fileInput.files[0]){fileBase64=await fileToBase64(fileInput.files[0])}await DB.updateSuratStatus(id,status,fileBase64,balasan),allData=await DB.getSurat(),renderTable(),closeModal('modal-detail'),adminToast('Status surat diperbarui!','success')}
+async function updateStatus(id,status){await DB.updateSuratStatus(id,status,null,''),allData=await DB.getSurat(),renderTable(),adminToast('Status diperbarui!','success')}
+async function confirmDeleteSurat(id){const ok=await adminConfirm('Yakin ingin menghapus pengajuan surat ini?');ok&&(await DB.deleteSurat(id),allData=await DB.getSurat(),renderTable(),adminToast('Pengajuan surat dihapus','info'))}
+document.addEventListener('DOMContentLoaded',(async()=>{allData=await DB.getSurat(),renderTable()}));
+</script>
+</body>
+</html>

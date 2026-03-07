@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RT 07 — Portal Layanan Warga</title>
+  <meta name="description"
+    content="Portal layanan warga RT 07. Pendaftaran warga, pengajuan surat, pembayaran iuran, pengaduan, dan informasi lingkungan.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon"><i class="fa-solid fa-house-chimney"></i></div>
+        <div>
+          <div>RT 07</div>
+          <div style="font-size:.7rem;font-weight:400;color:var(--text-gray)">Kelurahan Bahagia</div>
+        </div>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Beranda</a>
+        <a href="pendaftaran.html">Pendaftaran</a>
+        <a href="pengajuan-surat.html">Surat</a>
+        <a href="pembayaran.html">Iuran</a>
+        <a href="pengaduan.html">Pengaduan</a>
+        <a href="pengumuman.html">News</a>
+        <a href="agenda.html">Agenda</a>
+        <a href="admin-login.html" class="btn-admin-nav"><i class="fa-solid fa-lock"></i> Admin</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-badge"><i class="fa-solid fa-star"></i> Portal Resmi RT 07 Bahagia</div>
+        <h1>Layanan Warga <span>RT 07</span> Serba Digital</h1>
+        <p>Urus semua kebutuhan administrasi RT dari rumah. Cepat, mudah, dan transparan untuk seluruh warga RT 07
+          Bahagia.</p>
+        <div class="hero-cta">
+          <a href="pendaftaran.html" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Daftar Warga Baru</a>
+          <a href="pengajuan-surat.html" class="btn btn-outline"><i class="fa-solid fa-file-lines"></i> Ajukan Surat</a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <div class="hero-card modern-stats-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title"><i class="fa-solid fa-chart-line"></i> Statistik Lingkungan</div>
+            <div class="hero-card-subtitle">Data riil kondisi RT 07 saat ini</div>
+          </div>
+          <div class="hero-stats-grid">
+            <div class="hero-stat-item green">
+              <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" data-stat="totalWarga" id="hero-warga">0</div>
+                <div class="stat-label">Warga</div>
+              </div>
+            </div>
+            <div class="hero-stat-item amber">
+              <div class="stat-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" data-stat="suratPending" id="hero-surat">0</div>
+                <div class="stat-label">Proses Surat</div>
+              </div>
+            </div>
+            <div class="hero-stat-item blue">
+              <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" data-stat="kasSaldo" id="hero-kas-saldo">Rp 0</div>
+                <div class="stat-label">Saldo Kas</div>
+              </div>
+            </div>
+            <div class="hero-stat-item purple">
+              <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" data-stat="totalIuran" id="hero-iuran">Rp 0</div>
+                <div class="stat-label">Total Iuran</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-stats-footer">
+            <div class="mini-stat">
+              <span class="label">Pemasukan:</span>
+              <span class="value text-green" data-stat="totalKasPemasukan" id="hero-kas-in">Rp 0</span>
+            </div>
+            <div class="mini-stat">
+              <span class="label">Pengeluaran:</span>
+              <span class="value text-red" data-stat="totalKasPengeluaran" id="hero-kas-out">Rp 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+      style="width:100%;fill:#f0fdf4">
+      <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" />
+    </svg>
+  </div>
+
+  <!-- STATS ROW -->
+  <section class="section" style="padding-top:2rem">
+    <div class="section-inner">
+
+
+      <!-- LAYANAN -->
+      <div class="section-header animate-on-scroll">
+        <div class="section-badge"><i class="fa-solid fa-grid-2"></i> Layanan Kami</div>
+        <h2>Layanan Warga RT 07</h2>
+        <p>Akses semua layanan administrasi RT dengan mudah dan cepat tanpa perlu antri</p>
+      </div>
+      <div class="services-grid">
+        <a href="pendaftaran.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#10b981,#059669)">
+          <div class="service-icon" style="background:#d1fae5;color:#065f46"><i class="fa-solid fa-user-plus"></i></div>
+          <h3>Pendaftaran Warga</h3>
+          <p>Daftar sebagai warga baru RT 07 dengan mudah</p>
+        </a>
+        <a href="pengajuan-surat.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#3b82f6,#1d4ed8)">
+          <div class="service-icon" style="background:#dbeafe;color:#1d4ed8"><i class="fa-solid fa-file-lines"></i>
+          </div>
+          <h3>Pengajuan Surat</h3>
+          <p>Ajukan berbagai surat keterangan dengan cepat</p>
+        </a>
+        <a href="pembayaran.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#f59e0b,#d97706)">
+          <div class="service-icon" style="background:#fef3c7;color:#b45309"><i class="fa-solid fa-money-bill-wave"></i>
+          </div>
+          <h3>Pembayaran Iuran</h3>
+          <p>Cek dan bayar iuran bulanan RT Anda</p>
+        </a>
+        <a href="pengaduan.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#ef4444,#b91c1c)">
+          <div class="service-icon" style="background:#fee2e2;color:#b91c1c"><i
+              class="fa-solid fa-triangle-exclamation"></i></div>
+          <h3>Pengaduan</h3>
+          <p>Sampaikan keluhan dan saran untuk lingkungan RT</p>
+        </a>
+        <a href="pengumuman.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#8b5cf6,#7c3aed)">
+          <div class="service-icon" style="background:#ede9fe;color:#7c3aed"><i class="fa-solid fa-bullhorn"></i></div>
+          <h3>News</h3>
+          <p>Informasi dan berita terbaru dari RT</p>
+        </a>
+        <a href="agenda.html" class="service-card animate-on-scroll"
+          style="--card-gradient:linear-gradient(135deg,#06b6d4,#0891b2)">
+          <div class="service-icon" style="background:#cffafe;color:#0e7490"><i class="fa-regular fa-calendar-days"></i>
+          </div>
+          <h3>Agenda Kegiatan</h3>
+          <p>Jadwal kegiatan dan acara RT yang akan datang</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENGUMUMAN TERBARU -->
+  <section class="section section-bg-alt">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll"
+        style="display:flex;align-items:center;justify-content:space-between;text-align:left;margin-bottom:1.5rem">
+        <div>
+          <div class="section-badge"><i class="fa-solid fa-bullhorn"></i> News Terbaru</div>
+          <h2 style="margin-bottom:0">News RT</h2>
+        </div>
+        <a href="pengumuman.html" class="btn btn-secondary btn-sm">Lihat Semua <i
+            class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="pengumuman-grid" id="pengumuman-container">
+        <div class="flex-center" style="padding:3rem">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="section">
+    <div class="section-inner">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+        <div>
+          <div class="section-badge"><i class="fa-regular fa-calendar-days"></i> Jadwal</div>
+          <h2 style="font-family:'Poppins',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:0">
+            Agenda Mendatang</h2>
+        </div>
+        <a href="agenda.html" class="btn btn-secondary btn-sm">Lihat Semua <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="agenda-list" id="agenda-container">
+        <div class="flex-center" style="padding:3rem">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="background:linear-gradient(135deg,#064e3b,#059669);padding:4rem 1.5rem">
+    <div class="section-inner text-center" style="color:white">
+      <div style="font-size:3rem;margin-bottom:1rem">🏠</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:2rem;font-weight:800;margin-bottom:1rem">Warga Baru RT 07?
+      </h2>
+      <p style="opacity:.85;margin-bottom:2rem;max-width:500px;margin-inline:auto">Segera daftarkan diri Anda sebagai
+        warga resmi RT 07. Upload KK dan KTP untuk proses yang lebih cepat.</p>
+      <a href="pendaftaran.html" class="btn btn-primary" style="font-size:1rem;padding:.9rem 2rem">
+        <i class="fa-solid fa-user-plus"></i> Daftar Sekarang
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <div class="footer-brand-icon"><i class="fa-solid fa-house-chimney" style="color:white"></i></div>
+            <div class="footer-brand-name">RT 07 Bahagia</div>
+          </div>
+          <p class="footer-desc">Portal layanan digital warga RT 07 Kelurahan Bahagia. Memberikan pelayanan
+            administrasi yang cepat, mudah, dan transparan.</p>
+          <div class="footer-contact">
+            <p><i class="fa-solid fa-location-dot"></i> Jl. Sukamaju Raya, RT 07, Kelurahan Bahagia</p>
+            <p><i class="fa-solid fa-phone"></i> (021) 1234-5678</p>
+            <p><i class="fa-regular fa-envelope"></i> rt07bahagia@gmail.com</p>
+          </div>
+        </div>
+        <div>
+          <h4>Layanan</h4>
+          <div class="footer-links">
+            <a href="pendaftaran.html"><i class="fa-solid fa-chevron-right"></i> Pendaftaran Warga</a>
+            <a href="pengajuan-surat.html"><i class="fa-solid fa-chevron-right"></i> Pengajuan Surat</a>
+            <a href="pembayaran.html"><i class="fa-solid fa-chevron-right"></i> Pembayaran Iuran</a>
+            <a href="pengaduan.html"><i class="fa-solid fa-chevron-right"></i> Pengaduan</a>
+          </div>
+        </div>
+        <div>
+          <h4>Informasi</h4>
+          <div class="footer-links">
+            <a href="pengumuman.html"><i class="fa-solid fa-chevron-right"></i> News</a>
+            <a href="agenda.html"><i class="fa-solid fa-chevron-right"></i> Agenda Kegiatan</a>
+            <a href="admin-login.html"><i class="fa-solid fa-chevron-right"></i> Login Admin</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 RT 07 Bahagia. All rights reserved.</span>
+        <span>Dibuat oleh Satrio untuk warga RT 07</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL PENGUMUMAN DETAIL -->
+  <div class="modal-overlay" id="modal-pengumuman">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-bullhorn"></i> Detail Pengumuman</div>
+        <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="data.js?v=3"></script>
+  <script src="main.js"></script>
+  <script>window.checkProtocol=function(){};</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const stats = await DB.getStats();
+      // hero stats
+      document.getElementById('hero-warga').textContent = stats.totalWarga || 0;
+      document.getElementById('hero-surat').textContent = stats.suratPending || 0;
+      document.getElementById('hero-kas-in').textContent = formatRp(stats.totalKasPemasukan || 0);
+      document.getElementById('hero-kas-out').textContent = formatRp(stats.totalKasPengeluaran || 0);
+      document.getElementById('hero-kas-saldo').textContent = formatRp(stats.kasSaldo || 0);
+      document.getElementById('hero-iuran').textContent = formatRp(stats.totalIuran || 0);
+
+      // update data-count for counter anim
+      document.querySelectorAll('[data-stat]').forEach(el => {
+        const k = el.dataset.stat;
+        if (stats[k] !== undefined) el.dataset.count = stats[k];
+      });
+
+      // Ensure counters start or update
+      if (typeof initCounters === 'function') initCounters();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Kegiatan — RT 07</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                <div>
+                    <div>RT 07</div>
+                    <div style="font-size:.7rem;font-weight:400;color:var(--text-gray)">Kelurahan Bahagia</div>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Beranda</a>
+                <a href="pendaftaran.html">Pendaftaran</a>
+                <a href="pengajuan-surat.html">Surat</a>
+                <a href="pembayaran.html">Iuran</a>
+                <a href="pengaduan.html">Pengaduan</a>
+                <a href="pengumuman.html">News</a>
+                <a href="agenda.html" class="active">Agenda</a>
+                <a href="admin-login.html" class="btn-admin-nav"><i class="fa-solid fa-lock"></i> Admin</a>
+            </div>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="page-header-inner">
+            <div class="breadcrumb"><a href="index.html">Beranda</a><span>/</span><span>Agenda Kegiatan</span></div>
+            <h1><i class="fa-regular fa-calendar-days"></i> Agenda Kegiatan RT 07</h1>
+            <p>Jadwal kegiatan dan acara yang akan dilaksanakan di RT 07 Bahagia</p>
+        </div>
+    </div>
+
+    <section class="section" style="margin-top:-3rem;padding-top:0">
+        <div class="section-inner">
+            <!-- Filter -->
+            <div
+                style="background:white;border-radius:var(--radius-xl);padding:1.25rem 1.5rem;box-shadow:var(--shadow-md);margin-bottom:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+                <span style="font-weight:700;color:var(--text-dark);font-size:.95rem"><i class="fa-solid fa-filter"
+                        style="color:var(--primary)"></i> Filter:</span>
+                <select class="filter-select" id="filter-kat" onchange="renderAgenda()">
+                    <option value="">Semua Kategori</option>
+                    <option value="rapat">🗣️ Rapat</option>
+                    <option value="kegiatan">🎉 Kegiatan</option>
+                    <option value="kesehatan">🏥 Kesehatan</option>
+                    <option value="sosial">🤝 Sosial</option>
+                    <option value="lainnya">📌 Lainnya</option>
+                </select>
+                <select class="filter-select" id="filter-bulan" onchange="renderAgenda()">
+                    <option value="">Semua Bulan</option>
+                    <option value="2026-01">Januari 2026</option>
+                    <option value="2026-02">Februari 2026</option>
+                    <option value="2026-03">Maret 2026</option>
+                    <option value="2026-04">April 2026</option>
+                    <option value="2026-05">Mei 2026</option>
+                    <option value="2026-06">Juni 2026</option>
+                </select>
+                <div style="margin-left:auto;font-size:.85rem;color:var(--text-gray)" id="count-label"></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:3fr 2fr;gap:1.5rem;align-items:start">
+                <!-- List -->
+                <div>
+                    <div class="agenda-list" id="agenda-list"></div>
+                    <div id="empty-agenda" style="display:none" class="empty-state">
+                        <i class="fa-regular fa-calendar-xmark"></i>
+                        <h3>Tidak Ada Agenda</h3>
+                        <p>Tidak ada agenda untuk filter yang dipilih</p>
+                    </div>
+                </div>
+
+                <!-- Upcoming highlight -->
+                <div>
+                    <div
+                        style="background:linear-gradient(135deg,#064e3b,#059669);border-radius:var(--radius-xl);padding:1.5rem;color:white;position:sticky;top:90px">
+                        <div
+                            style="font-weight:700;font-size:1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px">
+                            <i class="fa-solid fa-calendar-star"></i> Agenda Terdekat
+                        </div>
+                        <div id="highlight-agenda">
+                            <div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:white">
+                            </div>
+                        </div>
+                        <div style="margin-top:1.5rem;border-top:1px solid rgba(255,255,255,0.2);padding-top:1rem">
+                            <div style="font-size:.8rem;opacity:.8;margin-bottom:.5rem">Kontak Ketua RT</div>
+                            <div style="font-size:.875rem;font-weight:600"><i class="fa-solid fa-phone"
+                                    style="margin-right:6px"></i>+62 813-8848-0100</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="modal-agenda">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-regular fa-calendar-days"></i> Detail Agenda</div>
+                <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-agenda-body"></div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="data.js?v=3"></script>
+    <script src="main.js"></script>
+    <script>window.checkProtocol=function(){};</script>
+    <script>
+        const katIcon = { rapat: '🗣️', kegiatan: '🎉', kesehatan: '🏥', sosial: '🤝', lainnya: '📌' };
+
+        const katBg = { rapat: '#d1fae5', kegiatan: '#fef3c7', kesehatan: '#dbeafe', sosial: '#ede9fe', lainnya: '#f3f4f6' };
+        const katClr = { rapat: '#065f46', kegiatan: '#b45309', kesehatan: '#1d4ed8', sosial: '#7c3aed', lainnya: '#374151' };
+
+        async function renderAgenda() {
+            const kat = document.getElementById('filter-kat').value;
+            const bln = document.getElementById('filter-bulan').value;
+            let list = await DB.getAgenda();
+            if (kat) list = list.filter(a => a.kategori === kat);
+            if (bln) list = list.filter(a => a.tanggal.startsWith(bln));
+            document.getElementById('count-label').textContent = `${list.length} agenda ditemukan`;
+            const el = document.getElementById('agenda-list');
+            const empty = document.getElementById('empty-agenda');
+            if (!list.length) { el.innerHTML = ''; empty.style.display = ''; return; }
+            empty.style.display = 'none';
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            el.innerHTML = list.map(a => {
+                const d = new Date(a.tanggal);
+                d.setHours(0, 0, 0, 0);
+                const isPast = d < today;
+                return `<div class="agenda-item animate-on-scroll animated" onclick="showDetail('${a.id}')" style="cursor:pointer;${isPast ? 'opacity:.7' : ''}">
+      <div class="agenda-date-box" style="${isPast ? 'background:#94a3b8' : ''}">
+        <span class="day">${d.getDate()}</span>
+        <span class="month">${['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][d.getMonth()]}</span>
+      </div>
+      <div class="agenda-info">
+        <h4 style="display:flex;align-items:center;gap:6px">${katIcon[a.kategori] || '📌'} ${a.judul}</h4>
+        <p><i class="fa-solid fa-location-dot" style="color:var(--primary);font-size:.8rem"></i> ${a.lokasi}</p>
+        ${isPast ? '<span style="font-size:.72rem;color:#94a3b8;font-weight:600">Sudah berlalu</span>' : ''}
+      </div>
+      <div style="text-align:right">
+        <div class="agenda-time"><i class="fa-regular fa-clock"></i> ${a.waktu} WIB</div>
+        <span style="font-size:.72rem;padding:.15rem .45rem;border-radius:50px;background:${katBg[a.kategori] || '#f3f4f6'};color:${katClr[a.kategori] || '#374151'};font-weight:600;margin-top:.3rem;display:inline-block">${a.kategori}</span>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        async function showDetail(id) {
+            const list = await DB.getAgenda();
+            const a = list.find(x => x.id === id);
+            if (!a) return;
+            const d = new Date(a.tanggal);
+            document.getElementById('modal-agenda-body').innerHTML = `
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="font-size:3rem;margin-bottom:.5rem">${katIcon[a.kategori] || '📌'}</div>
+      <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem">${a.judul}</h2>
+      <span style="font-size:.78rem;padding:.25rem .75rem;border-radius:50px;background:${katBg[a.kategori] || '#f3f4f6'};color:${katClr[a.kategori] || '#374151'};font-weight:600">${a.kategori}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+      <div style="background:#f8fafc;border-radius:var(--radius-md);padding:1rem;text-align:center">
+        <i class="fa-regular fa-calendar" style="color:var(--primary);font-size:1.2rem;margin-bottom:.4rem;display:block"></i>
+        <div style="font-weight:700">${d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:var(--radius-md);padding:1rem;text-align:center">
+        <i class="fa-regular fa-clock" style="color:var(--primary);font-size:1.2rem;margin-bottom:.4rem;display:block"></i>
+        <div style="font-weight:700">${a.waktu} WIB</div>
+      </div>
+    </div>
+    <div style="background:#f8fafc;border-radius:var(--radius-md);padding:1rem;margin-bottom:1rem;display:flex;gap:.75rem;align-items:center">
+      <i class="fa-solid fa-location-dot" style="color:var(--primary);font-size:1.1rem"></i>
+      <div><div style="font-weight:600;font-size:.875rem">Lokasi</div><div style="color:var(--text-gray);font-size:.875rem">${a.lokasi}</div></div>
+    </div>
+    <p style="line-height:1.8;color:var(--text-gray);font-size:.9rem">${a.deskripsi}</p>`;
+            openModal('modal-agenda');
+        }
+
+        async function renderHighlight() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const all = await DB.getAgenda();
+            const upcoming = all.filter(a => {
+                const d = new Date(a.tanggal);
+                d.setHours(0, 0, 0, 0);
+                return d >= today;
+            }).slice(0, 2);
+
+            const el = document.getElementById('highlight-agenda');
+            if (!upcoming.length) { el.innerHTML = '<p style="opacity:.7;font-size:.875rem">Tidak ada agenda mendatang</p>'; return; }
+            el.innerHTML = upcoming.map(a => {
+                const d = new Date(a.tanggal);
+                d.setHours(0, 0, 0, 0);
+                const diff = Math.round((d - today) / (1000 * 60 * 60 * 24));
+                return `<div style="background:rgba(255,255,255,0.12);border-radius:var(--radius-md);padding:1rem;margin-bottom:.75rem">
+      <div style="font-weight:700;margin-bottom:.3rem">${katIcon[a.kategori] || '📌'} ${a.judul}</div>
+      <div style="font-size:.8rem;opacity:.85"><i class="fa-regular fa-calendar"></i> ${d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+      <div style="font-size:.8rem;opacity:.85"><i class="fa-regular fa-clock"></i> ${a.waktu} WIB</div>
+      <div style="margin-top:.5rem;font-size:.75rem;background:rgba(255,255,255,0.15);padding:.2rem .6rem;border-radius:50px;display:inline-block">${diff === 0 ? 'Hari ini!' : diff === 1 ? 'Besok' : diff + ' hari lagi'}</div>
+    </div>`;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { renderAgenda(); renderHighlight(); });
+    </script>
+</body>
+
+</html>

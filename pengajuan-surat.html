@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Surat — RT 07</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                <div>
+                    <div>RT 07</div>
+                    <div style="font-size:.7rem;font-weight:400;color:var(--text-gray)">Kelurahan Bahagia</div>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Beranda</a>
+                <a href="pendaftaran.html">Pendaftaran</a>
+                <a href="pengajuan-surat.html" class="active">Surat</a>
+                <a href="pembayaran.html">Iuran</a>
+                <a href="pengaduan.html">Pengaduan</a>
+                <a href="pengumuman.html">News</a>
+                <a href="agenda.html">Agenda</a>
+                <a href="admin-login.html" class="btn-admin-nav"><i class="fa-solid fa-lock"></i> Admin</a>
+            </div>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="page-header-inner">
+            <div class="breadcrumb"><a href="index.html">Beranda</a><span>/</span><span>Pengajuan Surat</span></div>
+            <h1><i class="fa-solid fa-file-lines"></i> Pengajuan Surat</h1>
+            <p>Ajukan berbagai kebutuhan surat keterangan dari RT dengan mudah dan cepat</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="form-section-inner">
+            <!-- SUCCESS -->
+            <div id="success-state" style="display:none">
+                <div class="success-card">
+                    <div class="success-icon">📄</div>
+                    <h2>Pengajuan Berhasil!</h2>
+                    <p>Surat Anda sedang diproses. Kami akan menghubungi Anda bila surat sudah siap.</p>
+                    <div class="ref-number" id="ref-number"></div>
+                    <p style="font-size:.85rem;opacity:.8">Nomor referensi pengajuan Anda. Proses 1–3 hari kerja.</p>
+                    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                        <a href="index.html" class="btn btn-outline">Beranda</a>
+                        <button onclick="resetForm()" class="btn"
+                            style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.4)">Ajukan
+                            Lagi</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex;justify-content:center;margin-bottom:2.5rem">
+                <div class="segmented-control">
+                    <button class="segmented-btn active" id="tab-form" onclick="switchSection('form')">
+                        <i class="fa-solid fa-pen-to-square"></i> Form Pengajuan
+                    </button>
+                    <button class="segmented-btn" id="tab-status" onclick="switchSection('status')">
+                        <i class="fa-solid fa-magnifying-glass"></i> Cek Status
+                    </button>
+                </div>
+            </div>
+
+            <div id="status-state" style="display:none" class="form-container">
+                <div class="form-title"><i class="fa-solid fa-magnifying-glass"></i> Cek Status Pengajuan</div>
+                <div class="form-group">
+                    <label>Nomor Referensi <span class="required">*</span></label>
+                    <input type="text" id="check-ref" class="form-control" placeholder="Contoh: SRT-XXXXX">
+                </div>
+                <div class="form-group">
+                    <label>NIK Pemohon <span class="required">*</span></label>
+                    <input type="text" id="check-nik" class="form-control" placeholder="16 digit NIK" maxlength="16">
+                </div>
+                <div style="margin-top:1rem">
+                    <button class="btn btn-primary" style="width:100%" onclick="checkStatus()"><i
+                            class="fa-solid fa-search"></i> Periksa Status</button>
+                </div>
+
+                <div id="status-result"
+                    style="display:none;margin-top:2rem;padding-top:2rem;border-top:1px dashed var(--border)">
+                    <div id="result-content"></div>
+                </div>
+            </div>
+
+            <div id="form-state" class="form-container">
+                <div class="form-title"><i class="fa-solid fa-file-lines"></i> Formulir Pengajuan Surat</div>
+
+                <!-- Jenis Surat -->
+                <div style="margin-bottom:1.5rem">
+                    <label style="display:block;margin-bottom:.75rem;font-size:.875rem;font-weight:600">Pilih Jenis
+                        Surat <span style="color:var(--danger)">*</span></label>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem"
+                        id="jenis-grid">
+                        <div class="jenis-card" data-val="domisili" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">🏠</div>
+                            <div style="font-weight:700;font-size:.875rem">Surat Domisili</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Keterangan tempat
+                                tinggal</div>
+                        </div>
+                        <div class="jenis-card" data-val="pengantar" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">📋</div>
+                            <div style="font-weight:700;font-size:.875rem">Surat Pengantar</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Surat pengantar urusan
+                            </div>
+                        </div>
+                        <div class="jenis-card" data-val="kematian" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">🕊️</div>
+                            <div style="font-weight:700;font-size:.875rem">Surat Kematian</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Keterangan kematian
+                                warga</div>
+                        </div>
+                        <div class="jenis-card" data-val="kelahiran" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">👶</div>
+                            <div style="font-weight:700;font-size:.875rem">Surat Kelahiran</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Keterangan kelahiran
+                            </div>
+                        </div>
+                        <div class="jenis-card" data-val="skck" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">🛡️</div>
+                            <div style="font-weight:700;font-size:.875rem">Pengantar SKCK</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Pengantar permohonan
+                                SKCK</div>
+                        </div>
+                        <div class="jenis-card" data-val="usaha" onclick="selectJenis(this)">
+                            <div style="font-size:1.5rem;margin-bottom:.4rem">🏪</div>
+                            <div style="font-weight:700;font-size:.875rem">Surat Usaha</div>
+                            <div style="font-size:.75rem;color:var(--text-gray);margin-top:.2rem">Keterangan usaha
+                                rumahan</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="jenis-surat">
+                    <span class="error-msg" id="err-jenis"></span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>NIK Pemohon <span class="required">*</span></label>
+                        <div style="position:relative">
+                            <input type="text" id="nik" class="form-control" placeholder="16 digit NIK" maxlength="16"
+                                inputmode="numeric">
+                            <button onclick="lookupNIK()"
+                                style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--primary);color:white;border:none;border-radius:6px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;font-weight:600"><i
+                                    class="fa-solid fa-magnifying-glass"></i> Cek</button>
+                        </div>
+                        <span class="form-hint" style="color:var(--primary)">NIK terdaftar? Data akan otomatis
+                            terisi</span>
+                        <span class="error-msg" id="err-nik"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" id="nama" class="form-control" placeholder="Nama sesuai KTP">
+                        <span class="error-msg" id="err-nama"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Telepon <span class="required">*</span></label>
+                        <input type="tel" id="telepon" class="form-control" placeholder="08xx-xxxx-xxxx">
+                        <span class="error-msg" id="err-telepon"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Dibutuhkan <span class="required">*</span></label>
+                        <input type="date" id="tgl-butuh" class="form-control">
+                        <span class="error-msg" id="err-tgl"></span>
+                    </div>
+                    <div class="form-group full">
+                        <label>Keperluan / Keterangan <span class="required">*</span></label>
+                        <textarea id="keperluan" class="form-control" rows="4"
+                            placeholder="Jelaskan keperluan pengajuan surat ini..."></textarea>
+                        <span class="error-msg" id="err-keperluan"></span>
+                    </div>
+                    <div class="form-group full" id="tambahan-wrap" style="display:none">
+                        <label>Keterangan Tambahan</label>
+                        <textarea id="tambahan" class="form-control" rows="3"
+                            placeholder="Isi keterangan tambahan jika diperlukan..."></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1.5rem">
+                    <a href="index.html" class="btn btn-gray"><i class="fa-solid fa-arrow-left"></i> Batal</a>
+                    <button class="btn btn-primary" onclick="submitSurat()"><i class="fa-solid fa-paper-plane"></i>
+                        Ajukan Surat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="data.js?v=3"></script>
+    <script src="validation.js"></script>
+    <script src="main.js"></script>
+    <script>window.checkProtocol=function(){};</script>
+    <script>
+        let selectedJenis = '';
+        const labels = { domisili: 'Surat Domisili', pengantar: 'Surat Pengantar', kematian: 'Surat Kematian', kelahiran: 'Surat Kelahiran', skck: 'Pengantar SKCK', usaha: 'Surat Usaha' };
+
+        // Style jenis cards
+        const style = document.createElement('style');
+        style.textContent = `.jenis-card{border:2px solid var(--border);border-radius:var(--radius-md);padding:1.1rem;text-align:center;cursor:pointer;transition:var(--transition);background:white}.jenis-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow-md)}.jenis-card.selected{border-color:var(--primary);background:var(--primary-light);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}`;
+        document.head.appendChild(style);
+
+        function selectJenis(el) {
+            document.querySelectorAll('.jenis-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedJenis = el.dataset.val;
+            document.getElementById('jenis-surat').value = selectedJenis;
+            document.getElementById('err-jenis').classList.remove('show');
+            document.getElementById('tambahan-wrap').style.display = ['kematian', 'kelahiran'].includes(selectedJenis) ? '' : 'none';
+        }
+
+        async function lookupNIK() {
+            const nik = document.getElementById('nik').value.trim();
+            if (!/^\d{16}$/.test(nik)) { showToast('NIK harus 16 digit angka', 'error'); return; }
+            const warga = await DB.getWargaByNIK(nik);
+            if (warga) { document.getElementById('nama').value = warga.nama; document.getElementById('nama').classList.add('success-field'); showToast('Data warga ditemukan! ✓', 'success'); }
+            else { showToast('NIK tidak terdaftar. Silakan isi manual', 'info'); }
+        }
+
+        async function submitSurat() {
+            if (!selectedJenis) { document.getElementById('err-jenis').textContent = '⚠ Pilih jenis surat terlebih dahulu'; document.getElementById('err-jenis').classList.add('show'); showToast('Pilih jenis surat', 'error'); return; }
+            const nikVal = document.getElementById('nik').value.trim();
+            if (!/^\d{16}$/.test(nikVal)) { Validate.showError(document.getElementById('nik'), document.getElementById('err-nik'), 'NIK harus 16 digit angka'); showToast('NIK tidak valid', 'error'); return; }
+            const valid = Validate.form([
+                { inputId: 'nama', rules: [R.nama()], errElId: 'err-nama' },
+                { inputId: 'telepon', rules: [R.telepon()], errElId: 'err-telepon' },
+                { inputId: 'tgl-butuh', rules: [R.tanggal()], errElId: 'err-tgl' },
+                { inputId: 'keperluan', rules: [R.required('Keperluan')], errElId: 'err-keperluan' },
+            ]);
+            if (!valid) { showToast('Harap lengkapi semua data', 'error'); return; }
+            const result = await DB.addSurat({
+                nik: nikVal, nama: document.getElementById('nama').value,
+                telepon: document.getElementById('telepon').value,
+                jenisSurat: selectedJenis, jenisSuratLabel: labels[selectedJenis],
+                tglDibutuhkan: document.getElementById('tgl-butuh').value,
+                keperluan: document.getElementById('keperluan').value,
+                tambahan: document.getElementById('tambahan').value,
+            });
+            document.getElementById('form-state').style.display = 'none';
+            document.getElementById('success-state').style.display = '';
+            document.getElementById('ref-number').textContent = result.id;
+        }
+
+        function switchSection(sec) {
+            document.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + sec).classList.add('active');
+
+            if (sec === 'form') {
+                document.getElementById('form-state').style.display = '';
+                document.getElementById('status-state').style.display = 'none';
+                document.getElementById('success-state').style.display = 'none';
+            } else {
+                document.getElementById('form-state').style.display = 'none';
+                document.getElementById('status-state').style.display = '';
+                document.getElementById('success-state').style.display = 'none';
+            }
+        }
+
+        async function checkStatus() {
+            const ref = document.getElementById('check-ref').value.trim();
+            const nik = document.getElementById('check-nik').value.trim();
+
+            if (!ref || !nik) return showToast('Harap isi No. Referensi dan NIK', 'warning');
+
+            const list = await DB.getSurat();
+            const s = list.find(x => x.id === ref && x.nik === nik);
+
+            const resultDiv = document.getElementById('status-result');
+            const contentDiv = document.getElementById('result-content');
+
+            if (!s) {
+                resultDiv.style.display = 'block';
+                contentDiv.innerHTML = `<div style="text-align:center;color:var(--danger)"><i class="fa-solid fa-circle-xmark" style="font-size:2rem;margin-bottom:1rem"></i><br>Data pengajuan tidak ditemukan. Pastikan No. Referensi dan NIK sudah benar.</div>`;
+                return;
+            }
+
+            let statusHTML = '';
+            const statusMap = {
+                'pending': { label: 'Menunggu Antrean', color: 'var(--text-gray)', icon: 'fa-clock' },
+                'proses': { label: 'Sedang Diproses', color: 'var(--primary)', icon: 'fa-spinner fa-spin' },
+                'selesai': { label: 'Selesai', color: '#10b981', icon: 'fa-circle-check' },
+                'ditolak': { label: 'Ditolak', color: 'var(--danger)', icon: 'fa-circle-xmark' }
+            };
+            const st = statusMap[s.status] || statusMap['pending'];
+
+            contentDiv.innerHTML = `
+                <div style="text-align:center;margin-bottom:2rem">
+                    <div style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem">${s.jenisSuratLabel}</div>
+                    <div style="color:${st.color};font-weight:700;font-size:1.1rem"><i class="fa-solid ${st.icon}"></i> ${st.label}</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+                    <div><div style="font-size:.75rem;color:var(--text-gray);font-weight:700;text-transform:uppercase">No. Referensi</div><div style="font-weight:600">${s.id}</div></div>
+                    <div><div style="font-size:.75rem;color:var(--text-gray);font-weight:700;text-transform:uppercase">Tanggal Pengajuan</div><div style="font-weight:600">${formatDate(s.createdAt)}</div></div>
+                </div>
+                ${s.balasan ? `<div style="background:#f8fafc;padding:1rem;border-radius:var(--radius-md);margin-bottom:1.5rem;border-left:4px solid var(--primary)"><div style="font-size:.75rem;font-weight:700;color:var(--text-gray);margin-bottom:.3rem">PESAN DARI RT:</div><div style="font-size:.9rem">${s.balasan}</div></div>` : ''}
+                ${s.status === 'selesai' && s.fileSurat ? `
+                    <div style="text-align:center;background:var(--primary-light);padding:1.5rem;border-radius:var(--radius-lg);border:2px dashed var(--primary)">
+                        <div style="font-weight:700;margin-bottom:.75rem">Surat Digital Anda Sudah Siap!</div>
+                        <a href="${s.fileSurat}" download="Surat_${s.id}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:.5rem">
+                            <i class="fa-solid fa-download"></i> Unduh Surat (Digital)
+                        </a>
+                    </div>
+                ` : s.status === 'selesai' ? `
+                    <div style="text-align:center;background:#f3f4f6;padding:1.5rem;border-radius:var(--radius-lg)">
+                        <div style="font-weight:600">Surat sudah selesai diproses.</div>
+                        <div style="font-size:.85rem;color:var(--text-gray);margin-top:.5rem">Silakan ambil surat fisik di kantor Sekretariat RT dengan membawa KTP asli.</div>
+                    </div>
+                ` : ''}
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function resetForm() {
+            selectedJenis = '';
+            document.querySelectorAll('.jenis-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.form-control').forEach(el => { el.value = ''; el.className = 'form-control'; });
+            document.querySelectorAll('.error-msg').forEach(el => { el.textContent = ''; el.classList.remove('show'); });
+            document.getElementById('form-state').style.display = '';
+            document.getElementById('success-state').style.display = 'none';
+        }
+
+        // Set min date for tgl-butuh
+        document.getElementById('tgl-butuh').min = new Date().toISOString().split('T')[0];
+        document.getElementById('nik').addEventListener('input', function () { this.value = this.value.replace(/\D/g, '') });
+    </script>
+</body>
+
+</html>

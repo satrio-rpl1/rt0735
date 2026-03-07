@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Warga — Admin RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link active"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar">
+<div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Data Warga</div><div class="topbar-subtitle">Kelola data warga RT 07</div></div></div>
+<div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="openAddWarga()"><i class="fa-solid fa-plus"></i> Tambah Warga</button><button class="btn btn-secondary btn-sm" onclick="exportCSV()"><i class="fa-solid fa-file-export"></i> Export CSV</button></div>
+</header>
+<main class="page-content">
+<div class="admin-card">
+<div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-users"></i> Daftar Warga Terdaftar</div><div style="font-size:.85rem;color:var(--text-gray)">Total: <strong id="total-warga">0</strong> warga</div></div>
+<div class="table-toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="search" placeholder="Cari nama atau NIK..." oninput="renderTable()"></div><select class="filter-select" id="filter-jk" onchange="renderTable()"><option value="">Semua Jenis Kelamin</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>#</th><th>Nama</th><th>NIK</th><th>Alamat</th><th>JK</th><th>Pekerjaan</th><th>KK</th><th>KTP</th><th>Aksi</th></tr></thead><tbody id="warga-tbody"></tbody></table></div>
+<div class="pagination" id="pagination"></div>
+</div>
+</main>
+</div>
+</div>
+<div class="modal-overlay" id="modal-form-warga"><div class="admin-modal modal-lg"><div class="modal-header"><div class="modal-title" id="form-title"><i class="fa-solid fa-user-plus"></i> Tambah Data Warga</div><button class="modal-close" onclick="closeModal('modal-form-warga')"><i class="fa-solid fa-xmark"></i></button></div><form id="warga-form" onsubmit="saveWarga(event)"><input type="hidden" id="edit-id"><div class="form-grid"><div class="form-group"><label>NIK <span class="required">*</span></label><input type="text" id="f-nik" class="form-control" required maxlength="16" placeholder="16 digit NIK"></div><div class="form-group"><label>Nama Lengkap <span class="required">*</span></label><input type="text" id="f-nama" class="form-control" required placeholder="Nama sesuai KTP"></div><div class="form-group"><label>Jenis Kelamin <span class="required">*</span></label><select id="f-jk" class="form-control" required><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div><div class="form-group"><label>Agama</label><input type="text" id="f-agama" class="form-control" placeholder="Agama"></div><div class="form-group"><label>Tempat Lahir</label><input type="text" id="f-tempat-lahir" class="form-control" placeholder="Kota Lahir"></div><div class="form-group"><label>Tanggal Lahir</label><input type="date" id="f-tgl-lahir" class="form-control"></div><div class="form-group"><label>Pekerjaan</label><input type="text" id="f-pekerjaan" class="form-control" placeholder="Pekerjaan"></div><div class="form-group"><label>RT</label><input type="text" id="f-rt" class="form-control" value="07"></div><div class="form-group full"><label>Alamat Lengkap <span class="required">*</span></label><textarea id="f-alamat" class="form-control" required rows="2"></textarea></div></div><div class="modal-footer" style="margin-top:1.5rem"><button type="button" class="btn btn-secondary" onclick="closeModal('modal-form-warga')">Batal</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Simpan Data</button></div></form></div></div>
+<div class="modal-overlay" id="modal-warga"><div class="admin-modal modal-lg"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-user"></i> Detail Data Warga</div><button class="modal-close" onclick="closeModal('modal-warga')"><i class="fa-solid fa-xmark"></i></button></div><div id="modal-warga-body"></div></div></div>
+<div id="img-viewer" class="img-viewer-overlay"><button class="img-viewer-close" onclick="document.getElementById('img-viewer').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button><img class="img-viewer-img" id="img-viewer-img" src="" alt="Preview"></div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+let allWarga=[],currentPage=1,perPage=10;
+function renderTable(){const q=document.getElementById('search').value.toLowerCase();const jk=document.getElementById('filter-jk').value;let filtered=allWarga;q&&(filtered=filtered.filter((w=>(w.nama+w.nik+w.alamat).toLowerCase().includes(q)))),jk&&(filtered=filtered.filter((w=>w.jenisKelamin===jk))),document.getElementById('total-warga').textContent=filtered.length;const{data: e,pages: p}=paginate(filtered,currentPage,perPage),tbody=document.getElementById('warga-tbody');if(!e.length){tbody.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-gray)"><i class="fa-solid fa-users-slash" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>Tidak ada data warga</td></tr>`;document.getElementById('pagination').innerHTML='';return}tbody.innerHTML=e.map(((w,i)=>`<tr>
+    <td style="font-weight:700;color:var(--text-gray)">${(currentPage-1)*perPage+i+1}</td>
+    <td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${w.nama.charAt(0)}</div><div style="font-weight:600">${w.nama}</div></div></td>
+    <td style="font-family:monospace;font-size:.8rem">${w.nik}</td>
+    <td style="max-width:180px;font-size:.8rem;color:var(--text-gray)">${w.alamat}</td>
+    <td><span class="badge ${w.jenisKelamin==='L'?'badge-info':'badge-penting'}">${w.jenisKelamin==='L'?'♂ L-L':'♀ P'}</span></td>
+    <td style="font-size:.85rem">${w.pekerjaan||'-'}</td>
+    <td>${w.kkFile?`<img src="${w.kkFile}" class="kk-ktp-img" onclick="viewImage('${w.kkFile}')" alt="KK">`:'-'}</td>
+    <td>${w.ktpFile?`<img src="${w.ktpFile}" class="kk-ktp-img" onclick="viewImage('${w.ktpFile}')" alt="KTP">`:'-'}</td>
+    <td><div style="display:flex;gap:.3rem"><button class="btn btn-secondary btn-xs" onclick="showDetail('${w.id||w.nik}')" title="Detail"><i class="fa-solid fa-eye"></i></button><button class="btn btn-primary btn-xs" onclick="openEditWarga('${w.id||w.nik}')" title="Edit"><i class="fa-solid fa-pen"></i></button><button class="btn btn-danger btn-xs" onclick="confirmDeleteWarga('${w.id||w.nik}')" title="Hapus"><i class="fa-solid fa-trash"></i></button></div></td>
+  </tr>`)).join(''),renderPagination('pagination',p,currentPage,'changePage')}
+function changePage(p){currentPage=p,renderTable()}
+function openAddWarga(){document.getElementById('form-title').innerHTML='<i class="fa-solid fa-user-plus"></i> Tambah Data Warga',document.getElementById('edit-id').value='',document.getElementById('warga-form').reset(),openModal('modal-form-warga')}
+function openEditWarga(id){const w=allWarga.find((e=>(e.id||e.nik)===id));if(!w)return;document.getElementById('form-title').innerHTML='<i class="fa-solid fa-user-pen"></i> Edit Data Warga',document.getElementById('edit-id').value=id,document.getElementById('f-nik').value=w.nik,document.getElementById('f-nama').value=w.nama,document.getElementById('f-jk').value=w.jenisKelamin,document.getElementById('f-agama').value=w.agama||'',document.getElementById('f-tempat-lahir').value=w.tempatLahir||'',document.getElementById('f-tgl-lahir').value=w.tglLahir||'',document.getElementById('f-pekerjaan').value=w.pekerjaan||'',document.getElementById('f-rt').value=w.rt||'07',document.getElementById('f-alamat').value=w.alamat,openModal('modal-form-warga')}
+async function saveWarga(e){e.preventDefault();const id=document.getElementById('edit-id').value,data={nik:document.getElementById('f-nik').value,nama:document.getElementById('f-nama').value,jenisKelamin:document.getElementById('f-jk').value,agama:document.getElementById('f-agama').value,tempatLahir:document.getElementById('f-tempat-lahir').value,tglLahir:document.getElementById('f-tgl-lahir').value,pekerjaan:document.getElementById('f-pekerjaan').value,rt:document.getElementById('f-rt').value,alamat:document.getElementById('f-alamat').value};id?(await DB.updateWarga(id,data),adminToast('Data warga berhasil diperbarui!')):(await DB.addWarga(data),adminToast('Warga baru berhasil ditambahkan!')),closeModal('modal-form-warga'),allWarga=await DB.getWarga(),renderTable()}
+async function confirmDeleteWarga(id){const ok=await adminConfirm('Apakah Anda yakin ingin menghapus data warga ini? Semua data terkait mungkin akan hilang.');ok&&(await DB.deleteWarga(id),allWarga=await DB.getWarga(),renderTable(),adminToast('Data warga berhasil dihapus.','info'))}
+function showDetail(id){const w=allWarga.find((e=>(e.id||e.nik)===id));if(!w)return;document.getElementById('modal-warga-body').innerHTML=`
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin-bottom:1rem">${w.nama.charAt(0)}</div>
+        <h2 style="font-family:'Poppins',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.25rem">${w.nama}</h2>
+        <div style="font-size:.85rem;color:var(--text-gray);margin-bottom:1rem">NIK: <span style="font-family:monospace">${w.nik}</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+      ${[['Tempat Lahir', w.tempatLahir || '-'], ['Tanggal Lahir', w.tglLahir ? formatDate(w.tglLahir) : '-'], ['Jenis Kelamin', w.jenisKelamin === 'L' ? 'Laki-laki' : 'Perempuan'], ['Agama', w.agama || '-'], ['Pekerjaan', w.pekerjaan || '-'], ['RT', w.rt || '07']].map(([l, v]) => `<div style="background:#f8fafc;border-radius:var(--radius-sm);padding:.75rem"><div style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem">${l}</div><div style="font-weight:600">${v}</div></div>`).join('')}
+    </div>
+    <div style="margin-bottom:1rem"><div style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase;margin-bottom:.3rem">Alamat</div><div style="background:#f8fafc;border-radius:var(--radius-sm);padding:.75rem">${w.alamat}</div></div>
+    ${w.kkFile || w.ktpFile ? `<div><div style="font-weight:700;margin-bottom:.75rem">Dokumen</div><div style="display:flex;gap:1rem;flex-wrap:wrap">
+    ${w.kkFile ? `<div><div style="font-size:.8rem;color:var(--text-gray);margin-bottom:.3rem">Kartu Keluarga</div><img src="${w.kkFile}" style="width:160px;height:120px;object-fit:cover;border-radius:var(--radius-sm);border:2px solid var(--border);cursor:pointer" onclick="viewImage('${w.kkFile}')"></div>` : ''}
+    ${w.ktpFile ? `<div><div style="font-size:.8rem;color:var(--text-gray);margin-bottom:.3rem">KTP</div><img src="${w.ktpFile}" style="width:160px;height:120px;object-fit:cover;border-radius:var(--radius-sm);border:2px solid var(--border);cursor:pointer" onclick="viewImage('${w.ktpFile}')"></div>` : ''}
+    </div></div>`: ''}`;openModal('modal-warga')}
+function viewImage(src){document.getElementById('img-viewer-img').src=src;document.getElementById('img-viewer').classList.add('show')}
+document.getElementById('img-viewer').addEventListener('click',(function(e){e.target===this&&this.classList.remove('show')}));
+function exportCSV(){const header='Nama,NIK,Alamat,Jenis Kelamin,Agama,Pekerjaan,RT',rows=allWarga.map((w=>[w.nama,w.nik,w.alamat,"L"===w.jenisKelamin?"Laki-laki":"Perempuan",w.agama||"",w.pekerjaan||"",w.rt||"07"].join(','))),csv=header+'\n'+rows.join('\n'),a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv),a.download='data-warga-rt07.csv',a.click(),adminToast('Data warga berhasil di-export!','success')}
+document.addEventListener('DOMContentLoaded',(async()=>{allWarga=await DB.getWarga(),renderTable()}));
+</script>
+</body>
+</html>

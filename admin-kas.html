@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Kas — Admin RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link active"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar">
+<div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Kelola Kas</div><div class="topbar-subtitle">Tambah pemasukan & pengeluaran</div></div></div>
+<div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="openAddKas()"><i class="fa-solid fa-plus"></i> Tambah</button></div>
+</header>
+<main class="page-content">
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-wallet"></i> Riwayat Kas</div></div>
+<div class="table-toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="search-kas" placeholder="Cari deskripsi..." oninput="renderKasTable()"></div><select class="filter-select" id="filter-tipe" onchange="renderKasTable()"><option value="">Semua Jenis</option><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
+<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>#</th><th>Tanggal</th><th>Jenis</th><th>Jumlah</th><th>Deskripsi</th><th>Aksi</th></tr></thead><tbody id="kas-tbody"></tbody></table></div>
+</div>
+</main>
+</div>
+</div>
+<div class="modal-overlay" id="modal-kas-form"><div class="admin-modal modal-sm"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-wallet"></i> Form Kas</div><button class="modal-close"><i class="fa-solid fa-xmark"></i></button></div><form id="kas-form" onsubmit="saveKas(event)"><input type="hidden" id="kas-id" /><div class="form-row single"><div class="form-group"><label>Jenis <span class="required">*</span></label><select id="kas-tipe" class="form-control" required><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div><div class="form-group"><label>Jumlah <span class="required">*</span></label><input type="number" id="kas-jumlah" class="form-control" required min="0" /></div><div class="form-group full"><label>Deskripsi</label><input type="text" id="kas-deskripsi" class="form-control" /></div><div class="form-group"><label>Tanggal</label><input type="date" id="kas-tanggal" class="form-control" value="" /></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal('modal-kas-form')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+let kasList=[];async function loadKas(){kasList=await DB.getKas(),renderKasTable()}
+function renderKasTable(){const q=document.getElementById('search-kas').value.toLowerCase(),tipe=document.getElementById('filter-tipe').value;let filtered=kasList;q&&(filtered=filtered.filter((k=>k.deskripsi&&k.deskripsi.toLowerCase().includes(q)))),tipe&&(filtered=filtered.filter((k=>k.tipe===tipe)));const tbody=document.getElementById('kas-tbody');tbody.innerHTML=filtered.map(((k,i)=>`<tr>
+                <td>${i+1}</td>
+                <td>${k.tanggal||''}</td>
+                <td>${k.tipe}</td>
+                <td>Rp ${k.jumlah}</td>
+                <td>${k.deskripsi||'-'}</td>
+                <td><button class="btn btn-secondary btn-xs" onclick="editKas('${k.id}')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-danger btn-xs" onclick="deleteKas('${k.id}')"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`)).join('')}
+function openAddKas(){document.getElementById('kas-form').reset(),document.getElementById('kas-id').value='',openModal('modal-kas-form')}
+function editKas(id){const k=kasList.find((e=>e.id===id));if(!k)return;document.getElementById('kas-id').value=id,document.getElementById('kas-tipe').value=k.tipe,document.getElementById('kas-jumlah').value=k.jumlah,document.getElementById('kas-deskripsi').value=k.deskripsi,document.getElementById('kas-tanggal').value=k.tanggal,openModal('modal-kas-form')}
+async function saveKas(e){e.preventDefault();const id=document.getElementById('kas-id').value,data={tipe:document.getElementById('kas-tipe').value,jumlah:parseInt(document.getElementById('kas-jumlah').value,10),deskripsi:document.getElementById('kas-deskripsi').value,tanggal:document.getElementById('kas-tanggal').value};id?await DB.updateKas(id,data):await DB.addKas(data),adminToast('Data kas berhasil disimpan','success'),closeModal('modal-kas-form'),await loadKas()}
+async function deleteKas(id){const ok=await adminConfirm('Hapus entri kas ini?');ok&&(await DB.deleteKas(id),adminToast('Entri kas dihapus','info'),await loadKas())}
+document.addEventListener('DOMContentLoaded',loadKas);
+</script>
+</body>
+</html>

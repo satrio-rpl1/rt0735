@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Pengaduan — Admin RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link active"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar">
+<div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Kelola Pengaduan</div><div class="topbar-subtitle">Respons dan tindak lanjut pengaduan warga</div></div></div>
+</header>
+<main class="page-content">
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-triangle-exclamation"></i> Daftar Pengaduan</div><div class="admin-tabs"><button class="admin-tab-btn active" onclick="filterTab('semua',this)">Semua</button><button class="admin-tab-btn" onclick="filterTab('pending',this)">⏳ Baru</button><button class="admin-tab-btn" onclick="filterTab('proses',this)">🔄 Diproses</button><button class="admin-tab-btn" onclick="filterTab('selesai',this)">✅ Selesai</button></div></div><div class="table-toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="search" placeholder="Cari nama atau judul..." oninput="renderList()"></div><select class="filter-select" id="filter-kat" onchange="renderList()"><option value="">Semua Kategori</option><option value="keamanan">Keamanan</option><option value="kebersihan">Kebersihan</option><option value="jalan">Jalan</option><option value="sampah">Sampah</option><option value="kebisingan">Kebisingan</option><option value="fasilitas">Fasilitas</option><option value="lainnya">Lainnya</option></select></div><div id="pengaduan-list"></div><div class="pagination" id="pagination"></div></div>
+</main>
+</div>
+</div>
+<div class="modal-overlay" id="modal-detail"><div class="admin-modal modal-lg"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-triangle-exclamation"></i> Detail Pengaduan</div><button class="modal-close"><i class="fa-solid fa-xmark"></i></button></div><div id="modal-body"></div><div class="modal-footer" id="modal-footer"></div></div></div>
+<div id="img-viewer" class="img-viewer-overlay"><button class="img-viewer-close" onclick="this.closest('.img-viewer-overlay').classList.remove('show')"><i class="fa-solid fa-xmark"></i></button><img class="img-viewer-img" id="img-viewer-img" src="" alt=""></div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+let allData=[],currentFilter='semua',currentPage=1;const katIcon={keamanan:'🛡️',kebersihan:'🗑️',jalan:'🛣️',sampah:'🌿',kebisingan:'🔊',fasilitas:'🏗️',lainnya:'📌'};
+function filterTab(f,btn){currentFilter=f,currentPage=1,document.querySelectorAll('.admin-tab-btn').forEach((b=>b.classList.remove('active'))),btn.classList.add('active'),renderList()}
+function renderList(){const q=document.getElementById('search').value.toLowerCase(),kat=document.getElementById('filter-kat').value;let filtered=allData;'semua'!==currentFilter&&(filtered=filtered.filter((d=>d.status===currentFilter))),q&&(filtered=filtered.filter((d=>(d.nama+d.judul+d.deskripsi).toLowerCase().includes(q)))),kat&&(filtered=filtered.filter((d=>d.kategori===kat)));const{data,pages}=paginate(filtered,currentPage,10),el=document.getElementById('pengaduan-list');if(!data.length){el.innerHTML='<div class="empty-state"><i class="fa-solid fa-inbox"></i><h3>Tidak ada pengaduan</h3></div>',document.getElementById('pagination').innerHTML='';return}el.innerHTML=data.map((p=>`<div style="border-bottom:1px solid var(--border);padding:1rem 0;display:flex;align-items:flex-start;gap:1rem">
+    <div style="font-size:1.5rem;flex-shrink:0">${katIcon[p.kategori]||'📌'}</div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.3rem">
+        <div><div style="font-weight:700">${p.judul}</div><div style="font-size:.78rem;color:var(--text-gray)">${p.nama} (NIK: ${p.nik}) • ${p.kategori} • ${p.createdAt}</div></div>
+        ${statusBadge(p.status)}
+      </div>
+      <div style="font-size:.875rem;color:var(--text-gray);margin-bottom:.5rem">${p.deskripsi.substring(0,120)}${p.deskripsi.length>120?'...':''}</div>
+      ${p.fotos?.length?`<div class="photos-row">${p.fotos.map((f=>`<img src="${f}" class="photo-preview" onclick="viewImage('${f}')" alt="foto">`)).join('')}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.4rem;flex-shrink:0">
+      <button class="btn btn-secondary btn-xs" onclick="showDetail('${p.id}')"><i class="fa-solid fa-eye"></i> Detail</button>
+      ${p.status==='pending'?`<button class="btn btn-primary btn-xs" onclick="updateStatus('${p.id}','proses')"><i class="fa-solid fa-play"></i> Proses</button>`:''}
+      ${p.status==='proses'?`<button class="btn btn-primary btn-xs" onclick="showDetail('${p.id}')"><i class="fa-solid fa-check"></i> Selesai</button>`:''}
+      <button class="btn btn-danger btn-xs" onclick="confirmDeletePengaduan('${p.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+    </div>
+  </div>`)).join(''),renderPagination('pagination',pages,currentPage,'changePage')}
+function changePage(p){currentPage=p,renderList()}
+function showDetail(id){const p=allData.find((e=>e.id===id));if(!p)return;document.getElementById('modal-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      ${[['No Referensi', p.id], ['Pelapor', p.nama], ['NIK', p.nik], ['Telepon', p.telepon || '-'], ['Kategori', katIcon[p.kategori] + ' ' + p.kategori], ['Anonim', p.anonim ? 'Ya' : 'Tidak']].map(([l, v]) => `<div><div style="font-size:.72rem;font-weight:700;color:var(--text-gray);text-transform:uppercase">${l}</div><div style="font-weight:600;margin-top:.2rem">${v}</div></div>`).join('')}
+    </div>
+    <div style="margin-bottom:1rem"><div style="font-weight:700;margin-bottom:.3rem">${p.judul}</div><div style="background:#f8fafc;border-radius:var(--radius-sm);padding:.75rem;font-size:.875rem;line-height:1.6">${p.deskripsi}</div></div>
+    ${p.fotos?.length ? `<div style="margin-bottom:1rem"><div style="font-weight:700;margin-bottom:.5rem">Foto Pendukung:</div><div class="photos-row">${p.fotos.map(f => `<img src="${f}" class="photo-preview" onclick="viewImage('${f}')" alt="foto">`).join('')}</div></div>` : ''}
+    <div style="margin-bottom:1rem">${statusBadge(p.status)}</div>
+    <div>
+      <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:.4rem">Update Status:</label>
+      <select id="status-sel" class="form-control" style="max-width:200px;margin-bottom:1rem">
+        ${[['pending','⏳ Baru'],['proses','🔄 Diproses'],['selesai','✅ Selesai']].map(([v,l])=>`<option value="${v}" ${p.status===v?'selected':''}>${l}</option>`).join('')}
+      </select>
+      <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:.4rem">Balasan / Tindak Lanjut:</label>
+      <textarea id="balasan-input" class="form-control" rows="3" placeholder="Tulis balasan atau keterangan tindak lanjut...">${p.balasan||''}</textarea>
+    </div>`;document.getElementById('modal-footer').innerHTML=`<button class="btn btn-secondary" onclick="closeModal('modal-detail')">Tutup</button><button class="btn btn-primary" onclick="saveDetail('${p.id}')"><i class="fa-solid fa-save"></i> Simpan</button>`,openModal('modal-detail')}
+async function saveDetail(id){const status=document.getElementById('status-sel').value,balasan=document.getElementById('balasan-input').value;await DB.updatePengaduanStatus(id,status,balasan),allData=(await DB.getPengaduan()).reverse(),renderList(),closeModal('modal-detail'),adminToast('Pengaduan berhasil diperbarui!','success')}
+async function updateStatus(id,status){await DB.updatePengaduanStatus(id,status,''),allData=(await DB.getPengaduan()).reverse(),renderList(),adminToast('Status diperbarui!','success')}
+async function confirmDeletePengaduan(id){const ok=await adminConfirm('Yakin ingin menghapus pengaduan ini?');if(!ok)return;await DB.deletePengaduan(id),allData=(await DB.getPengaduan()).reverse(),renderList(),adminToast('Pengaduan berhasil dihapus','info')}
+function viewImage(src){document.getElementById('img-viewer-img').src=src,document.getElementById('img-viewer').classList.add('show')}
+document.getElementById('img-viewer').addEventListener('click',(function(e){e.target===this&&this.classList.remove('show')}));
+document.addEventListener('DOMContentLoaded',(async()=>{allData=(await DB.getPengaduan()).reverse(),renderList()}));
+</script>
+</body>
+</html>

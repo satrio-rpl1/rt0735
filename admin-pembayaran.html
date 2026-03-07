@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Iuran — Admin RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link active"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar">
+<div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Kelola Iuran</div><div class="topbar-subtitle">Manajemen pembayaran iuran warga</div></div></div>
+<div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="openModal('modal-add-tagihan')"><i class="fa-solid fa-plus"></i> Tambah Tagihan</button></div>
+</header>
+<main class="page-content">
+<div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
+<div class="stat-widget"><div class="stat-widget-icon c-green"><i class="fa-solid fa-circle-check"></i></div><div><div class="stat-widget-num text-green" id="sum-lunas">0</div><div class="stat-widget-label">Tagihan Lunas</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-amber"><i class="fa-solid fa-clock"></i></div><div><div class="stat-widget-num text-amber" id="sum-belum">0</div><div class="stat-widget-label">Perlu Review</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-amber"><i class="fa-solid fa-coins"></i></div><div><div class="stat-widget-num text-amber" id="sum-total-rp">Rp 0</div><div class="stat-widget-label">Total Terkumpul</div></div></div>
+</div>
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-money-bill-wave"></i> Riwayat Iuran Semua Warga</div></div>
+<div class="table-toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="search" placeholder="Cari nama atau NIK..." oninput="renderTable()"></div><select class="filter-select" id="filter-status" onchange="renderTable()"><option value="">Semua Status</option><option value="pending">⏳ Menunggu Review</option><option value="lunas">✅ Lunas</option><option value="uang-tidak-masuk">💸 Uang Tidak Masuk</option><option value="ditolak">❌ Data Tidak Valid</option><option value="belum">❌ Belum Bayar</option></select><select class="filter-select" id="filter-bulan" onchange="renderTable()"><option value="">Semua Bulan</option></select></div>
+<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Nama</th><th>NIK</th><th>Bulan</th><th>Status</th><th>Metode</th><th>Aksi</th></tr></thead><tbody id="iuran-tbody"></tbody></table></div><div class="pagination" id="pagination"></div>
+</div>
+</main>
+</div>
+</div>
+<div class="modal-overlay" id="modal-review"><div class="admin-modal"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-magnifying-glass-dollar"></i> Review Pembayaran</div><button class="modal-close"><i class="fa-solid fa-xmark"></i></button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1rem"><div><h4 style="margin-bottom:.5rem">Bukti Pembayaran</h4><img id="review-bukti" src="" style="width:100%;border-radius:8px;border:1px solid var(--border);cursor:pointer" onclick="viewImage(this.src)"></div><div><h4 style="margin-bottom:.5rem">Detail Tagihan</h4><div style="background:var(--bg-light);padding:1rem;border-radius:8px;font-size:.9rem"><div style="margin-bottom:.5rem;display:flex;justify-content:space-between"><span>Nama:</span><span id="review-nama" style="font-weight:600"></span></div><div style="margin-bottom:.5rem;display:flex;justify-content:space-between"><span>NIK:</span><span id="review-nik" style="font-family:monospace"></span></div><div style="margin-bottom:.5rem;display:flex;justify-content:space-between"><span>Bulan:</span><span id="review-bulan"></span></div><div style="margin-bottom:.5rem;display:flex;justify-content:space-between"><span>Metode:</span><span id="review-metode" style="font-weight:600;color:var(--primary)"></span></div><div style="margin-bottom:0;display:flex;justify-content:space-between"><span>Jumlah:</span><span id="review-jumlah" style="font-weight:700"></span></div></div><div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.75rem"><button class="btn btn-primary" onclick="validasi('lunas')" style="width:100%"><i class="fa-solid fa-check"></i> Setujui (Lunas)</button><div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem"><button class="btn btn-danger btn-outline" onclick="validasi('uang-tidak-masuk')"><i class="fa-solid fa-money-bill-transfer"></i> Uang Tidak Masuk</button><button class="btn btn-gray" onclick="validasi('ditolak')"><i class="fa-solid fa-circle-xmark"></i> Data Tidak Valid</button></div></div></div></div></div>
+<div class="modal-overlay" id="modal-add-tagihan"><div class="admin-modal modal-sm"><div class="modal-header"><div class="modal-title"><i class="fa-solid fa-plus"></i> Tambah Tagihan</div><button class="modal-close"><i class="fa-solid fa-xmark"></i></button></div><div class="form-row single"><div class="form-group"><label>NIK Warga <span class="required">*</span></label><div style="display:flex;gap:.5rem"><input type="text" id="add-nik" class="form-control" placeholder="16 digit NIK" maxlength="16"><button class="btn btn-primary btn-sm" onclick="lookupWarga()" style="flex-shrink:0">Cek</button></div><div id="warga-found" style="font-size:.8rem;color:var(--primary);margin-top:.3rem;display:none"></div></div></div></div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+let all=[],currentPage=1,perPage=10;const MONTHS_ID=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function bulanToIndo(b){const[y,m]=b.split('-');return `${MONTHS_ID[parseInt(m)-1]} ${y}`}
+function renderTable(){const q=document.getElementById('search').value.toLowerCase(),st=document.getElementById('filter-status').value,bl=document.getElementById('filter-bulan').value;let filtered=all;q&&(filtered=filtered.filter((p=>(p.nama+p.nik).toLowerCase().includes(q)))),st&&(filtered=filtered.filter((p=>p.status===st))),bl&&(filtered=filtered.filter((p=>p.bulan===bl)));const {data,pages}=paginate(filtered,currentPage,perPage),tbody=document.getElementById('iuran-tbody');tbody.innerHTML=data.map((p=>`<tr>
+<td>${p.nama}</td><td style="font-family:monospace">${p.nik}</td><td>${bulanToIndo(p.bulan)}</td><td>${statusBadge(p.status)}</td><td><span class="badge badge-info">${p.metodeBayar||'-'}</span></td><td><button class="btn btn-primary btn-xs" onclick="openReview('${p.id}')">Review</button></td>`)).join(''),renderPagination('pagination',pages,currentPage,'changePage')}
+function changePage(p){currentPage=p,renderTable()}
+function updateSummary(){const lunas=all.filter((p=>p.status==='lunas')).length,belum=all.filter((p=>p.status==='pending')).length,total=all.filter((p=>p.status==='lunas')).reduce(((s,p)=>s+(parseInt(p.jumlah)||0)),0);document.getElementById('sum-lunas').textContent=lunas,document.getElementById('sum-belum').textContent=belum,document.getElementById('sum-total-rp').textContent=formatRp(total)}
+function openReview(id){const p=all.find((e=>e.id===id));if(!p)return;document.getElementById('review-bukti').src=p.buktiBayar||'',document.getElementById('review-nama').textContent=p.nama,document.getElementById('review-nik').textContent=p.nik,document.getElementById('review-bulan').textContent=bulanToIndo(p.bulan),document.getElementById('review-metode').textContent=p.metodeBayar||'-',document.getElementById('review-jumlah').textContent=formatRp(p.jumlah),openModal('modal-review');window.validasi=async function(st){await DB.validasiPembayaran(id,st),adminToast('Status pembayaran diperbarui'),all=await DB.getPembayaran(),renderTable(),updateSummary(),closeModal('modal-review')}}
+async function lookupWarga(){const nik=document.getElementById('add-nik').value.trim();if(!nik)return;const w=await DB.getWargaByNIK(nik),el=document.getElementById('warga-found');if(w){el.style.display='block',el.textContent=`${w.nama} ditemukan.`;const now=new Date();const bln=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;const newItem={id:DB.genId('IUR'),nik:w.nik,nama:w.nama,bulan:bln,jumlah:25000,status:'belum'};const list=await DB.getPembayaran();list.push(newItem);DB.write('pembayaran',list);adminToast('Tagihan dibuat untuk bulan ini','success');all=await DB.getPembayaran();renderTable();updateSummary()}else{el.style.display='block',el.textContent='Warga tidak ditemukan'}}
+document.addEventListener('DOMContentLoaded',async()=>{all=await DB.getPembayaran();renderTable();updateSummary();const sel=document.getElementById('filter-bulan');const months=[...new Set(all.map((p=>p.bulan)))];sel.innerHTML='<option value=\"\">Semua Bulan</option>'+months.map((m=>`<option value="${m}">${bulanToIndo(m)}</option>`)).join('')});
+</script>
+</body>
+</html>

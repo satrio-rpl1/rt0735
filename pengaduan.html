@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaduan — RT 07</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                <div>
+                    <div>RT 07</div>
+                    <div style="font-size:.7rem;font-weight:400;color:var(--text-gray)">Kelurahan Bahagia</div>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Beranda</a>
+                <a href="pendaftaran.html">Pendaftaran</a>
+                <a href="pengajuan-surat.html">Surat</a>
+                <a href="pembayaran.html">Iuran</a>
+                <a href="pengaduan.html" class="active">Pengaduan</a>
+                <a href="pengumuman.html">News</a>
+                <a href="agenda.html">Agenda</a>
+                <a href="admin-login.html" class="btn-admin-nav"><i class="fa-solid fa-lock"></i> Admin</a>
+            </div>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="page-header-inner">
+            <div class="breadcrumb"><a href="index.html">Beranda</a><span>/</span><span>Pengaduan</span></div>
+            <h1><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan Warga</h1>
+            <p>Sampaikan keluhan, saran, dan masukan untuk lingkungan RT 07 yang lebih baik</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="form-section-inner">
+            <!-- Success -->
+            <div id="success-state" style="display:none">
+                <div class="success-card">
+                    <div class="success-icon">📢</div>
+                    <h2>Pengaduan Terkirim!</h2>
+                    <p>Pengaduan Anda telah kami terima dan akan segera ditindaklanjuti oleh pihak RT.</p>
+                    <div class="ref-number" id="ref-number"></div>
+                    <p style="font-size:.85rem;opacity:.8">Gunakan nomor ini untuk memantau status pengaduan Anda.</p>
+                    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                        <a href="index.html" class="btn btn-outline">Beranda</a>
+                        <button onclick="resetForm()" class="btn"
+                            style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.4)">Buat
+                            Pengaduan Lagi</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="form-state">
+                <!-- Tabs -->
+                <div class="tabs" style="margin-bottom:1.5rem">
+                    <button class="tab-btn active" onclick="switchTab('form',this)">📝 Buat Pengaduan</button>
+                    <button class="tab-btn" onclick="switchTab('cek',this)">🔍 Cek Status</button>
+                </div>
+
+                <!-- FORM TAB -->
+                <div id="tab-form" class="form-container">
+                    <div class="form-title"><i class="fa-solid fa-pen-to-square"></i> Formulir Pengaduan</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nama Pelapor <span class="required">*</span></label>
+                            <input type="text" id="nama" class="form-control" placeholder="Nama lengkap Anda">
+                            <span class="error-msg" id="err-nama"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>NIK <span class="required">*</span></label>
+                            <input type="text" id="nik" class="form-control" placeholder="16 digit NIK" maxlength="16"
+                                inputmode="numeric">
+                            <span class="error-msg" id="err-nik"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Telepon <span class="required">*</span></label>
+                            <input type="tel" id="telepon" class="form-control" placeholder="08xx-xxxx-xxxx">
+                            <span class="error-msg" id="err-telepon"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori Pengaduan <span class="required">*</span></label>
+                            <select id="kategori" class="form-control">
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="keamanan">🛡️ Keamanan</option>
+                                <option value="kebersihan">🗑️ Kebersihan</option>
+                                <option value="jalan">🛣️ Jalan/Infrastruktur</option>
+                                <option value="sampah">🌿 Sampah</option>
+                                <option value="kebisingan">🔊 Kebisingan</option>
+                                <option value="fasilitas">🏗️ Fasilitas Umum</option>
+                                <option value="lainnya">📌 Lainnya</option>
+                            </select>
+                            <span class="error-msg" id="err-kategori"></span>
+                        </div>
+                        <div class="form-group full">
+                            <label>Judul Pengaduan <span class="required">*</span></label>
+                            <input type="text" id="judul" class="form-control"
+                                placeholder="Ringkasan singkat pengaduan Anda">
+                            <span class="error-msg" id="err-judul"></span>
+                        </div>
+                        <div class="form-group full">
+                            <label>Deskripsi / Keterangan <span class="required">*</span></label>
+                            <textarea id="deskripsi" class="form-control" rows="5"
+                                placeholder="Jelaskan pengaduan Anda secara detail. Sertakan lokasi, waktu, dan informasi relevan lainnya..."></textarea>
+                            <span class="error-msg" id="err-deskripsi"></span>
+                        </div>
+                        <div class="form-group full">
+                            <label>Upload Foto Pendukung <span style="color:var(--text-light)">(Opsional, maks 3
+                                    foto)</span></label>
+                            <div class="upload-area" id="upload-foto-area">
+                                <input type="file" id="file-foto" accept="image/jpeg,image/jpg,image/png" multiple>
+                                <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
+                                <div class="upload-text">Klik atau drag & drop foto pendukung</div>
+                                <div class="upload-hint">Format: JPG, PNG • Maks 3 foto • Masing-masing maks 5MB</div>
+                            </div>
+                            <div class="photo-grid" id="photo-preview-grid" style="display:none"></div>
+                            <span id="foto-count" style="font-size:.8rem;color:var(--text-gray);display:none"></span>
+                        </div>
+                        <div class="form-group full">
+                            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500">
+                                <input type="checkbox" id="anonim"> Kirim secara anonim (nama tidak ditampilkan ke
+                                publik)
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1.5rem">
+                        <a href="index.html" class="btn btn-gray">Batal</a>
+                        <button class="btn btn-primary" onclick="submitPengaduan()"><i
+                                class="fa-solid fa-paper-plane"></i> Kirim Pengaduan</button>
+                    </div>
+                </div>
+
+                <!-- CEK STATUS TAB -->
+                <div id="tab-cek" class="form-container" style="display:none">
+                    <div class="form-title"><i class="fa-solid fa-magnifying-glass"></i> Cek Status Pengaduan</div>
+                    <div style="display:flex;gap:1rem;margin-bottom:1.5rem">
+                        <input type="text" id="cek-nik" class="form-control" placeholder="Masukkan NIK Anda"
+                            maxlength="16" inputmode="numeric">
+                        <button class="btn btn-primary" onclick="cekStatus()"><i
+                                class="fa-solid fa-magnifying-glass"></i> Cek</button>
+                    </div>
+                    <div id="status-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="data.js?v=3"></script>
+    <script src="validation.js"></script>
+    <script src="main.js"></script>
+    <script>window.checkProtocol=function(){};</script>
+    <script>
+        let fotoFiles = [], fotoB64 = [];
+
+        document.getElementById('nik').addEventListener('input', function () { this.value = this.value.replace(/\D/g, '') });
+        document.getElementById('cek-nik').addEventListener('input', function () { this.value = this.value.replace(/\D/g, '') });
+
+        document.getElementById('file-foto').addEventListener('change', function () {
+            const files = Array.from(this.files).slice(0, 3);
+            if (files.length > 3) { showToast('Maksimal 3 foto pendukung', 'warning'); return; }
+            const invalid = files.find(f => !['image/jpeg', 'image/jpg', 'image/png'].includes(f.type));
+            if (invalid) { showToast('Hanya format JPG/PNG yang diizinkan', 'error'); return; }
+            const oversize = files.find(f => f.size > 5 * 1024 * 1024);
+            if (oversize) { showToast('Setiap foto maksimal 5MB', 'error'); return; }
+            fotoFiles = files;
+            const grid = document.getElementById('photo-preview-grid');
+            const cnt = document.getElementById('foto-count');
+            grid.innerHTML = ''; grid.style.display = 'grid';
+            cnt.style.display = ''; cnt.textContent = `${files.length} foto dipilih`;
+            files.forEach(f => {
+                const reader = new FileReader();
+                reader.onload = e => { const img = document.createElement('img'); img.className = 'photo-thumb'; img.src = e.target.result; grid.appendChild(img); };
+                reader.readAsDataURL(f);
+            });
+        });
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-form').style.display = tab === 'form' ? '' : 'none';
+            document.getElementById('tab-cek').style.display = tab === 'cek' ? '' : 'none';
+        }
+
+        async function submitPengaduan() {
+            const valid = Validate.form([
+                { inputId: 'nama', rules: [R.nama()], errElId: 'err-nama' },
+                { inputId: 'nik', rules: [R.nik()], errElId: 'err-nik' },
+                { inputId: 'telepon', rules: [R.telepon()], errElId: 'err-telepon' },
+                { inputId: 'kategori', rules: [R.required('Kategori')], errElId: 'err-kategori' },
+                { inputId: 'judul', rules: [R.required('Judul')], errElId: 'err-judul' },
+                { inputId: 'deskripsi', rules: [R.required('Deskripsi'), R.minLen(20, 'Deskripsi')], errElId: 'err-deskripsi' },
+            ]);
+            if (!valid) { showToast('Harap lengkapi semua data', 'error'); return; }
+            let fotosB64 = [];
+            if (fotoFiles.length) fotosB64 = await Promise.all(fotoFiles.map(fileToBase64));
+            const data = {
+                nama: document.getElementById('anonim').checked ? 'Anonim' : document.getElementById('nama').value,
+                nik: document.getElementById('nik').value,
+                telepon: document.getElementById('telepon').value,
+                kategori: document.getElementById('kategori').value,
+                judul: document.getElementById('judul').value,
+                deskripsi: document.getElementById('deskripsi').value,
+                fotos: fotosB64,
+                anonim: document.getElementById('anonim').checked,
+            };
+            const result = await DB.addPengaduan(data);
+            document.getElementById('form-state').style.display = 'none';
+            document.getElementById('success-state').style.display = '';
+            document.getElementById('ref-number').textContent = result.id;
+        }
+
+        async function cekStatus() {
+            const nik = document.getElementById('cek-nik').value.trim();
+            if (!/^\d{16}$/.test(nik)) { showToast('NIK harus 16 digit', 'error'); return; }
+            const all = await DB.getPengaduan();
+            const list = all.filter(p => p.nik === nik);
+            const el = document.getElementById('status-result');
+            if (!list.length) { el.innerHTML = '<div class="empty-state"><i class="fa-solid fa-inbox"></i><h3>Tidak Ada Pengaduan</h3><p>Belum ada pengaduan dari NIK ini.</p></div>'; return; }
+            const statusLabel = { pending: '⏳ Menunggu', proses: '🔄 Diproses', selesai: '✅ Selesai' };
+            const statusClass = { pending: 'status-pending', proses: 'status-proses', selesai: 'status-selesai' };
+            el.innerHTML = list.map(p => `<div class="form-container" style="margin-bottom:1rem;padding:1.25rem">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+      <div><div style="font-weight:700">${p.judul}</div><div style="font-size:.8rem;color:var(--text-gray)">${p.id} • ${formatDate(p.createdAt)}</div></div>
+      <span class="status-badge ${statusClass[p.status] || 'status-pending'}">${statusLabel[p.status] || p.status}</span>
+    </div>
+    <p style="font-size:.875rem;color:var(--text-gray)">${p.deskripsi}</p>
+    ${p.balasan ? `<div style="background:var(--primary-light);border-radius:var(--radius-sm);padding:.75rem;margin-top:.75rem;font-size:.85rem"><strong style="color:var(--primary-dark)">Balasan RT:</strong> ${p.balasan}</div>` : ''}
+  </div>`).join('');
+        }
+
+        function resetForm() {
+            fotoFiles = []; fotoB64 = [];
+            document.querySelectorAll('.form-control').forEach(el => { el.value = ''; el.className = 'form-control'; });
+            document.querySelectorAll('.error-msg').forEach(el => { el.textContent = ''; el.classList.remove('show'); });
+            document.getElementById('photo-preview-grid').style.display = 'none';
+            document.getElementById('foto-count').style.display = 'none';
+            document.getElementById('anonim').checked = false;
+            document.getElementById('form-state').style.display = '';
+            document.getElementById('success-state').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

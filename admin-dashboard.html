@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin — RT 07</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-house-chimney"></i></div><div><div class="sidebar-brand-name">RT 07 Admin</div><span class="sidebar-brand-sub">Kelurahan Bahagia</span></div></div>
+<nav class="sidebar-nav">
+<div class="nav-section-label">UTAMA</div>
+<a href="admin-dashboard.html" class="sidebar-link active"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+<a href="admin-warga.html" class="sidebar-link"><i class="fa-solid fa-users"></i> Data Warga</a>
+<div class="nav-section-label">LAYANAN</div>
+<a href="admin-pendaftaran.html" class="sidebar-link"><i class="fa-solid fa-user-plus"></i> Pendaftaran<span class="sidebar-badge" data-badge-stat="pendaftaranPending">0</span></a>
+<a href="admin-surat.html" class="sidebar-link"><i class="fa-solid fa-file-lines"></i> Pengajuan Surat<span class="sidebar-badge" data-badge-stat="suratPending">0</span></a>
+<a href="admin-pembayaran.html" class="sidebar-link"><i class="fa-solid fa-money-bill-wave"></i> Iuran</a>
+<a href="admin-kas.html" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Kas</a>
+<a href="admin-pengaduan.html" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan<span class="sidebar-badge" data-badge-stat="pengaduanBaru">0</span></a>
+<div class="nav-section-label">KONTEN</div>
+<a href="admin-pengumuman.html" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> News & Agenda</a>
+<div class="nav-section-label">PENGATURAN</div>
+<a href="admin-profile.html" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profil & Admin</a>
+</nav>
+<div class="sidebar-footer"><div class="sidebar-user"><div class="sidebar-avatar">A</div><div><div class="sidebar-user-name">Admin RT</div><div class="sidebar-user-role">Administrator</div></div></div><button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+<div class="admin-content">
+<header class="topbar">
+<div class="topbar-left"><button class="sidebar-toggle" id="sidebar-toggle"><span></span><span></span><span></span></button><div><div class="topbar-title">Dashboard</div><div class="topbar-subtitle">Selamat datang, Admin RT 07</div></div></div>
+<div class="topbar-right"><div style="font-size:.85rem;color:var(--text-gray)" id="clock"></div><a href="index.html" target="_blank" class="btn btn-secondary btn-sm"><i class="fa-solid fa-eye"></i> Lihat Website</a></div>
+</header>
+<main class="page-content">
+<div class="stats-row">
+<div class="stat-widget"><div class="stat-widget-icon c-green"><i class="fa-solid fa-users"></i></div><div><div class="stat-widget-num text-green" data-stat="totalWarga">0</div><div class="stat-widget-label">Total Warga</div><div class="stat-widget-trend trend-up"><i class="fa-solid fa-arrow-up"></i> Terdaftar</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-amber"><i class="fa-solid fa-user-plus"></i></div><div><div class="stat-widget-num text-amber" data-stat="pendaftaranPending">0</div><div class="stat-widget-label">Pendaftaran Pending</div><div class="stat-widget-trend trend-down"><i class="fa-solid fa-clock"></i> Menunggu verifikasi</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-blue"><i class="fa-solid fa-file-lines"></i></div><div><div class="stat-widget-num text-blue" data-stat="suratPending">0</div><div class="stat-widget-label">Surat Pending</div><div class="stat-widget-trend trend-down"><i class="fa-solid fa-clock"></i> Perlu ditindak</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-red"><i class="fa-solid fa-triangle-exclamation"></i></div><div><div class="stat-widget-num text-red" data-stat="pengaduanBaru">0</div><div class="stat-widget-label">Pengaduan Baru</div><div class="stat-widget-trend trend-down"><i class="fa-solid fa-clock"></i> Perlu respons</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-green"><i class="fa-solid fa-arrow-down"></i></div><div><div class="stat-widget-num text-green" data-stat="totalKasPemasukan">0</div><div class="stat-widget-label">Total Pemasukan Kas</div><div class="stat-widget-trend trend-up"><i class="fa-solid fa-money-bill-wave"></i> Sepanjang Waktu</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-red"><i class="fa-solid fa-arrow-up"></i></div><div><div class="stat-widget-num text-red" data-stat="totalKasPengeluaran">0</div><div class="stat-widget-label">Total Pengeluaran Kas</div><div class="stat-widget-trend trend-down"><i class="fa-solid fa-money-bill-wave"></i> Sepanjang Waktu</div></div></div>
+<div class="stat-widget"><div class="stat-widget-icon c-blue"><i class="fa-solid fa-wallet"></i></div><div><div class="stat-widget-num text-blue" data-stat="kasSaldo">0</div><div class="stat-widget-label">Saldo Kas</div><div class="stat-widget-trend"><i class="fa-solid fa-coins"></i> Saat Ini</div></div></div>
+</div>
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem">
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-user-plus"></i> Pendaftaran Terbaru</div><a href="admin-pendaftaran.html" class="btn btn-secondary btn-sm">Lihat Semua</a></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Nama</th><th>NIK</th><th>Status</th><th>Tanggal</th></tr></thead><tbody id="tb-pendaftaran"></tbody></table></div></div>
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-money-bill-wave"></i> Iuran Perlu Review</div><a href="admin-pembayaran.html" class="btn btn-secondary btn-sm">Lihat Semua</a></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Nama</th><th>Bulan</th><th>Metode</th><th>Aksi</th></tr></thead><tbody id="tb-iuran-review"></tbody></table></div></div>
+<div><div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-bolt"></i> Aksi Cepat</div></div><div class="quick-actions"><a href="admin-pengumuman.html" class="quick-action"><span class="quick-action-icon">📢</span><span>Tambah News</span></a><a href="admin-pengumuman.html" class="quick-action"><span class="quick-action-icon">📅</span><span>Tambah Agenda</span></a><a href="admin-pembayaran.html" class="quick-action"><span class="quick-action-icon">💰</span><span>Kelola Iuran</span></a><a href="admin-warga.html" class="quick-action"><span class="quick-action-icon">👥</span><span>Data Warga</span></a><button onclick="confirmReset()" class="quick-action" style="border:none;background:none;width:100%;text-align:left;color:var(--danger)"><span class="quick-action-icon">🗑️</span><span>Reset Semua Data</span></button></div></div>
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-palette"></i> Pengaturan Tema</div></div><div style="padding:1rem"><p style="font-size:.8rem;color:var(--text-gray);margin-bottom:.75rem">Upload gambar background untuk halaman user.</p><div class="upload-area" style="padding:1.5rem;border:2px dashed var(--border);border-radius:12px;text-align:center;cursor:pointer" onclick="document.getElementById('theme-upload').click()"><i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;color:var(--primary);margin-bottom:.5rem"></i><div style="font-size:.85rem;font-weight:600">Klik untuk upload</div><div style="font-size:.7rem;color:var(--text-gray)">JPG/PNG (Max 5MB)</div><input type="file" id="theme-upload" hidden accept="image/*"></div><div id="theme-preview" style="margin-top:1rem;display:none"><img id="theme-preview-img" src="" style="width:100%;border-radius:8px;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--border)"><button class="btn btn-primary btn-sm" style="width:100%;margin-top:.5rem" id="btn-save-theme">Simpan Tema</button></div></div></div>
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-triangle-exclamation"></i> Pengaduan Terbaru</div><a href="admin-pengaduan.html" class="btn btn-secondary btn-sm">Lihat Semua</a></div><div id="latest-pengaduan"></div></div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:0">
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-file-lines"></i> Surat Terbaru</div><a href="admin-surat.html" class="btn btn-secondary btn-sm">Lihat Semua</a></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Pemohon</th><th>Jenis</th><th>Status</th></tr></thead><tbody id="tb-surat"></tbody></table></div></div>
+<div class="admin-card"><div class="admin-card-header"><div class="admin-card-title"><i class="fa-solid fa-gear"></i> Pengaturan QRIS</div><button onclick="saveSettings()" class="btn btn-primary btn-sm">Simpan</button></div><div class="settings-content" style="padding:1rem"><div class="upload-area" id="qris-upload-area" style="border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:var(--transition);background:var(--bg-main)"><input type="file" id="qris-input" hidden accept="image/*"><div id="qris-preview-container"><div id="qris-empty"><i class="fa-solid fa-qrcode" style="font-size:3rem;color:var(--text-light);margin-bottom:1rem"></i><p style="font-size:.85rem;color:var(--text-gray)">Klik atau drag & drop foto/SS QRIS di sini</p></div><img id="qris-preview" src="" style="max-width:200px;display:none;margin:0 auto;border-radius:8px;box-shadow:var(--shadow-md)"></div></div><p style="font-size:.75rem;color:var(--text-gray);margin-top:.75rem"><i class="fa-solid fa-info-circle"></i> QRIS ini akan muncul di halaman pembayaran warga.</p></div></div>
+</div>
+</main>
+</div>
+</div>
+<div id="admin-toast-container" class="toast-container"></div>
+<script src="data.js?v=3"></script>
+<script src="admin.js"></script>
+<script>
+function updateClock(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleString('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}updateClock();setInterval(updateClock,1000);
+async function loadTb(){const all=await DB.getPendaftaran();const list=all.slice(-5).reverse();const tbody=document.getElementById('tb-pendaftaran');if(!tbody)return;if(!list.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--text-gray)">Belum ada pendaftaran</td></tr>';return;}tbody.innerHTML=list.map(p=>`<tr>
+<td data-label="Nama"><div style="font-weight:600">${p.nama}</div></td>
+<td data-label="NIK" style="font-family:monospace;font-size:.8rem">${p.nik}</td>
+<td data-label="Status">${statusBadge(p.status)}</td>
+<td data-label="Tanggal" style="font-size:.8rem;color:var(--text-gray)">${p.createdAt.split(',')[0]}</td>
+</tr>`).join('');}
+async function loadSurat(){const all=await DB.getSurat();const list=all.slice(-4).reverse();const tbody=document.getElementById('tb-surat');if(!tbody)return;if(!list.length){tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:1.5rem;color:var(--text-gray)">Belum ada pengajuan surat</td></tr>';return;}tbody.innerHTML=list.map(s=>`<tr>
+<td data-label="Pemohon" style="font-weight:600">${s.nama}</td>
+<td data-label="Jenis" style="font-size:.8rem">${s.jenisSuratLabel||s.jenisSurat}</td>
+<td data-label="Status">${statusBadge(s.status)}</td>
+</tr>`).join('');}
+async function loadPengaduan(){const all=await DB.getPengaduan();const list=all.slice(-3).reverse();const el=document.getElementById('latest-pengaduan');if(!el)return;if(!list.length){el.innerHTML='<div class="empty-state" style="padding:1.5rem"><i class="fa-solid fa-inbox"></i><h3>Tidak ada pengaduan</h3></div>';return;}el.innerHTML=list.map(p=>`<div style="border-bottom:1px solid var(--border);padding:.85rem 0;last-child:no-border">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div style="flex:1"><div style="font-weight:600;font-size:.875rem">${p.judul}</div><div style="font-size:.78rem;color:var(--text-gray)">${p.nama} • ${p.kategori}</div></div>
+${statusBadge(p.status)}
+</div>
+</div>`).join('');}
+async function loadDashboardAgenda(){const now=new Date();const all=await DB.getAgenda();const list=all.filter(a=>new Date(a.tanggal)>=now).slice(0,4);const el=document.getElementById('dashboard-agenda');if(!el)return;if(!list.length){el.innerHTML='<div class="empty-state" style="padding:1.5rem"><i class="fa-regular fa-calendar-xmark"></i><h3>Tidak ada agenda mendatang</h3></div>';return;}el.innerHTML=list.map(a=>{const d=new Date(a.tanggal);return `<div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border)">
+<div style="min-width:44px;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0">
+<span style="font-size:1.1rem;line-height:1">${d.getDate()}</span>
+<span style="font-size:.6rem;text-transform:uppercase">${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()]}</span>
+</div>
+<div><div style="font-weight:600;font-size:.875rem">${a.judul}</div><div style="font-size:.78rem;color:var(--text-gray)">${a.waktu} WIB • ${a.lokasi}</div></div>
+</div>`}).join('');}
+let themeBase64='';let qrisBase64='';
+async function loadSettings(){const s=await DB.getSettings();if(s){if(s.themeBg){themeBase64=s.themeBg;document.getElementById('theme-preview').style.display='block';document.getElementById('theme-preview-img').src=s.themeBg;}if(s.qrisImage){qrisBase64=s.qrisImage;const qrisImg=document.getElementById('qris-preview');qrisImg.src=s.qrisImage;qrisImg.style.display='block';document.getElementById('qris-empty').style.display='none';}}}
+function compressImage(base64,maxWidth=1200,quality=.7){return new Promise((resolve)=>{const img=new Image();img.src=base64;img.onload=()=>{const canvas=document.createElement('canvas');let width=img.width;let height=img.height;if(width>maxWidth){height=Math.round((height*maxWidth)/width);width=maxWidth;}canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,width,height);resolve(canvas.toDataURL('image/jpeg',quality));};img.onerror=()=>resolve(base64);});}
+const qrisArea=document.getElementById('qris-upload-area');const qrisInput=document.getElementById('qris-input');qrisArea.onclick=()=>qrisInput.click();qrisInput.onchange=async(e)=>{const file=e.target.files[0];if(file){if(file.size>2*1024*1024)return adminToast('QRIS terlalu besar (max 2MB)','error');const reader=new FileReader();reader.onload=async(re)=>{adminToast('Memproses QRIS...','info');qrisBase64=await compressImage(re.target.result,800,.7);const qrisImg=document.getElementById('qris-preview');qrisImg.src=qrisBase64;qrisImg.style.display='block';document.getElementById('qris-empty').style.display='none';adminToast('QRIS siap disimpan!');};reader.readAsDataURL(file);}}
+async function saveSettings(){const btn=document.querySelector('button[onclick="saveSettings()"]');if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';}try{const s=await DB.getSettings();s.qrisImage=qrisBase64;s.themeBg=themeBase64;const ok=await DB.setSettings(s);if(ok)adminToast('Pengaturan berhasil disimpan!');else adminToast('Gagal menyimpan pengaturan.','error');}catch(err){adminToast('Terjadi kesalahan saat menyimpan.','error');}finally{if(btn){btn.disabled=false;btn.innerHTML='Simpan';}}}
+document.addEventListener('DOMContentLoaded',async()=>{await loadTb();await loadSurat();async function loadDashboardIuran(){const all=await DB.getPembayaran();const pending=all.filter(p=>p.status==='pending');const tbody=document.getElementById('tb-iuran-review');if(!tbody)return;if(!pending.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:1rem;color:var(--text-gray)">Semua pembayaran sudah divalidasi</td></tr>';return;}tbody.innerHTML=pending.slice(0,5).map(p=>`<tr>
+<td data-label="Nama" style="font-weight:600">${p.nama}</td>
+<td data-label="Bulan">${bulanToIndo(p.bulan)}</td>
+<td data-label="Metode"><span class="badge badge-info">${p.metodeBayar}</span></td>
+<td data-label="Aksi"><a href="admin-pembayaran.html" class="btn btn-primary btn-xs">Proses</a></td>
+</tr>`).join('');}
+await loadPengaduan();await loadDashboardAgenda();await loadDashboardIuran();await loadSettings();const upload=document.getElementById('theme-upload');const preview=document.getElementById('theme-preview');const previewImg=document.getElementById('theme-preview-img');const btnSave=document.getElementById('btn-save-theme');upload.addEventListener('change',async(e)=>{const file=e.target.files[0];if(!file)return;if(file.size>5*1024*1024)return adminToast('File terlalu besar (max 5MB)','error');const reader=new FileReader();reader.onload=async(re)=>{adminToast('Sedang memproses gambar...','info');try{themeBase64=await compressImage(re.target.result,1600,.6);previewImg.src=themeBase64;preview.style.display='block';adminToast('Gambar siap disimpan!');}catch(err){adminToast('Gagal memproses gambar.','error');}};reader.readAsDataURL(file);e.target.value='';});btnSave.addEventListener('click',saveSettings);});
+async function confirmReset(){const ok=await adminConfirm('PERHATIAN: Ini akan MENGHAPUS SEMUA DATA (warga, iuran, pendaftaran, dll). Tindakan ini tidak bisa dibatalkan. Lanjutkan?','Reset Database','danger');if(ok){await DB.clearAll();adminToast('Data berhasil dibersihkan!','success');setTimeout(()=>location.reload(),1000);}}
+</script>
+</body>
+</html>
